@@ -1,6 +1,6 @@
 # ARCHITECTURE.md — Vara Organics (Varixa Global)
 
-D2C storefront. **Next.js 15 App Router · React 19 · TypeScript strict · Tailwind · Supabase ·
+D2C storefront. **Next.js 16 App Router · React 19 · TypeScript strict · Tailwind v4 · Supabase ·
 Razorpay · Shiprocket · Resend.** SSR/SSG/ISR on a Node runtime (Hostinger). No static export.
 
 ---
@@ -181,7 +181,7 @@ hosting is insufficient (needs a Node server for SSR/API/ISR/webhooks).
 | # | Contradiction | Resolution |
 |---|---|---|
 | **C1** | Dev Kit → **Vercel** + `next-sitemap` + `pages/api/revalidate.js` (Pages Router). Build prompt → **Hostinger** + App Router. | Build for **Hostinger + App Router**. Translate `getStaticProps/getStaticPaths/pages/api` → `generateStaticParams`/`revalidate`/Route Handlers/`revalidatePath`. Native `sitemap.ts`/`robots.ts`. |
-| **C2** | Dev Kit "Next.js 14". Prompt "latest stable". | **Next.js 15 / React 19.** |
+| **C2** | Dev Kit "Next.js 14". Prompt "latest stable". | **Next.js 16 / React 19.** |
 | **C3** | Fixed routes list ghee **500 ml and 1 L as two separate slugs**, but SEO rules say **sizes are `?size=` query params with canonical → base**. | One `products` row + `product_variants`; **both required slugs are real indexable URLs** each bound to a variant; inline switching uses `?size=`, canonical = the fixed slug of the selected variant. Honors both rules. |
 | **C4** | Dev Kit product schema uses **denormalized JSON** (`variants`, `images`, `lab_params`, `faq` on the row). Prompt requires **normalized tables**. | **Normalized** schema (variants/images/batches/lab_parameters/... tables). |
 | **C5** | Dev Kit: Product JSON-LD "`aggregateRating` empty at launch". Prompt + Dev Kit checklist: **no fake ratings**. | **Omit `aggregateRating` entirely** until real reviews exist (empty is invalid schema). |

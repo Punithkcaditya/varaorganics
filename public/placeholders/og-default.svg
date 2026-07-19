@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Nature's Finest Gift">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F4BE45"/><stop offset="1" stop-color="#0F1D3C"/>
+  </linearGradient></defs>
+  <rect width="800" height="800" fill="url(#g)"/>
+  <text x="400" y="400" font-family="Georgia,serif" font-size="52" fill="#F4BE45" text-anchor="middle" opacity="0.85">Vara Organics</text>
+  <text x="400" y="470" font-family="system-ui,sans-serif" font-size="26" fill="#F4BE45" text-anchor="middle" opacity="0.55">Nature's Finest Gift</text>
+  <text x="400" y="620" font-family="system-ui,sans-serif" font-size="20" fill="#F4BE45" text-anchor="middle" opacity="0.4">Product photography pending</text>
+</svg>

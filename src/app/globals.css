@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
+/*
+  Vara Organics design tokens.
+  Values reconstructed from vara-organics-v2.html :root (the supplied design
+  reference) and the brand values in the Developer Kit. Tailwind v4 CSS-first
+  config: these become utilities like bg-navy, text-gold, font-serif, etc.
+*/
+@theme {
+  /* Brand */
+  --color-navy: #15284c;
+  --color-navy-deep: #0f1d3c;
+  --color-navy-mid: #1e3666;
+  --color-gold: #e8961c;
+  --color-gold-lt: #f4be45;
+  --color-amber: #c9760f;
+
+  /* Surfaces */
+  --color-ivory: #fbf9f4;
+  --color-paper: #ede8dd;
+  --color-white: #ffffff;
+
+  /* Status */
+  --color-success: #1f8a5b;
+  --color-success-lt: #5fbf6a;
+  --color-warning: #c9760f;
+  --color-danger: #c0392b;
+
+  /* Text / lines */
+  --color-muted: rgba(21, 40, 76, 0.55);
+  --color-muted-lt: rgba(244, 240, 232, 0.55);
+  --color-border: rgba(21, 40, 76, 0.1);
+  --color-border-lt: rgba(244, 240, 232, 0.12);
+
+  /* Typography */
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
+
+  /* Type scale */
+  --text-eyebrow: 0.6875rem; /* 11px */
+
+  /* Containers */
+  --container-site: 1200px;
+  --container-narrow: 760px;
+
+  /* Shadows */
+  --shadow-card: 0 16px 44px rgba(21, 40, 76, 0.11);
+  --shadow-sticky: 0 -4px 24px rgba(0, 0, 0, 0.2);
+
+  /* Radii */
+  --radius-brand: 2px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-ivory);
+  --foreground: var(--color-navy);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Respect reduced-motion preference (WCAG). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Accessible focus ring for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Skip-to-content link (visually hidden until focused). */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 1000;
+  background: var(--color-navy);
+  color: var(--color-ivory);
+  padding: 12px 20px;
+  border-radius: 0 0 var(--radius-brand) 0;
+}
+.skip-link:focus {
+  left: 0;
 }

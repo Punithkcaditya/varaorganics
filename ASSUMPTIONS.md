@@ -19,7 +19,7 @@ marked **CONFIRM** must be validated by Varixa Global before go-live.
 ## B. Platform & stack
 
 1. **Next.js version:** Dev Kit pins "Next.js 14". The build prompt requires "latest stable".
-   → Building on **Next.js 15 (App Router) + React 19**. Behaviour identical; App Router APIs modernized (see REQUIREMENTS_TRACEABILITY.md §Modernization).
+   → Building on **Next.js 16 (App Router) + React 19**. Behaviour identical; App Router APIs modernized (see REQUIREMENTS_TRACEABILITY.md §Modernization).
 2. **Hosting:** Dev Kit assumes **Vercel** (+ `next-sitemap`, `pages/api/revalidate.js`). The build prompt requires **Hostinger** (Node runtime, not static export). → Targeting **Hostinger Node / VPS**; using native App Router `sitemap.ts`, `robots.ts`, and a Route Handler for revalidation. `next-sitemap` **not** used. **No static export** (SSR/API/ISR require a Node server).
 3. **CMS:** Sanity listed as optional in Dev Kit. → **Not used**; Supabase is the single source of content.
 4. **Email:** "Resend or Klaviyo". → **Resend**.
@@ -52,6 +52,41 @@ marked **CONFIRM** must be validated by Varixa Global before go-live.
 ## F. Credentials (all absent → env placeholders, runtime-validated)
 
 Supabase URL/keys, Razorpay key id/secret/webhook secret, Shiprocket email/password/pickup, Resend API key, GA4 / Meta Pixel / Search-Console IDs, `REVALIDATE_SECRET`. All in `.env.example`; production boot fails with a clear message if required ones are missing. **The app runs in a mock/degraded mode locally without them** (mock Supabase data fallback, payment/shipping calls stubbed) so the build and tests pass offline.
+
+## G2. July-17 documents (Tech Stack + Landing Page Copy)
+
+17. **Hosting — Vercel vs Hostinger.** The Tech Stack doc specifies Vercel; the original spec and
+    all prior work specify Hostinger, and deployment is already under way there.
+    → **Confirmed: stay on Hostinger.** Behaviour is identical either way (both run a Node server).
+18. **Domain — `.in` vs `.com`.** The Tech Stack doc says `varaorganics.in`; every canonical,
+    sitemap entry and schema uses `varaorganics.com`. → **Confirmed: `.com`.**
+19. **Next.js 14 (doc) vs 16 (built).** Same resolution as B1 — latest stable.
+20. **Denormalized schema in the Tech Stack doc** (products.variants jsonb, batches, inventory)
+    conflicts with our normalized schema (see ARCHITECTURE C4). → Kept normalized; the doc's
+    *inventory + reorder_point* idea was added as a proper `inventory` table (migration 0003).
+21. **Email split.** Resend = transactional (order, shipping, alerts, weekly report).
+    Klaviyo = marketing automation, fired via `dataLayer` → GTM. Both, as the doc intends.
+22. **GTM is now primary** for GA4 / Meta Pixel / Clarity / Klaviyo. Direct GA4+Pixel loading is
+    retained only as a fallback for when `NEXT_PUBLIC_GTM_ID` is empty.
+
+### ⚠️ CONFIRM — Landing Page Copy conflicts (do not launch without resolving)
+
+23. **Prices contradict the catalog and themselves.** The copy states 250 ml **₹749** and 1 L
+    **₹2,599**; the catalog has **₹799** and **₹2,699**. The same doc's comparison table also claims
+    Vara is **₹1,999/litre**, which matches neither. The **catalog is authoritative for anything
+    charged** — the landing-page strings are display copy only and must be reconciled.
+24. **Competitor comparison table** names Two Brothers (₹3,999), Anveshan (₹3,699) and Farmse
+    (₹1,540) with "Not published" lab claims. This is comparative advertising: it needs **dated
+    evidence on file** for every figure and claim before going live. Built data-driven so a row can
+    be corrected or removed without a deploy.
+25. **New owner-supplied claims** used verbatim as brand content, but requiring substantiation:
+    Jagdamba Laboratories (OPC) Pvt. Ltd. Jaipur, "ISO 9001:2015", "GLP Certified", "Govt. Approved
+    Test House", "FSSAI licensed since 2017", "29 Gir cows, 10 hectares", "70 parameters".
+26. **LP cta_url in the doc's SQL** (`/shop/ghee/a2-gir-cow-bilona-ghee-500ml`) does not match the
+    fixed URL structure (`/ghee/a2-gir-cow-bilona-ghee-500ml`). → Kept the fixed structure; the LP
+    CTA adds to cart and goes to checkout rather than linking to a non-existent path.
+27. **Video section (LP2)** — no farm video supplied, so the doc's fallback applies: the 4-step
+    process cards render instead. Founder photo is a placeholder circle.
 
 ## G. Analytics / consent
 
