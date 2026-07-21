@@ -6,8 +6,13 @@ import { NextResponse, type NextRequest } from "next/server";
  * cookie on every request and redirects unauthenticated visitors to the login
  * page. /admin/login itself stays public.
  *
- * In mock mode (no Supabase configured) the admin UI is reachable so it can be
- * developed offline — production always requires a real session.
+ * Fail-closed policy:
+ *  - Explicit mock mode (NEXT_PUBLIC_USE_MOCK_DATA="true") — local development
+ *    only — leaves /admin open so it can be built offline.
+ *  - Any other case where Supabase is not configured (e.g. a production deploy
+ *    that is missing its env vars) BLOCKS /admin rather than exposing it. This
+ *    prevents a misconfigured deploy from serving an unauthenticated admin
+ *    panel on a public domain.
  */
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next({ request: { headers: req.headers } });
@@ -17,7 +22,15 @@ export async function middleware(req: NextRequest) {
   const isMock = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
   const isLogin = req.nextUrl.pathname.startsWith("/admin/login");
 
-  if (isMock || !url || !anon) return res;
+  // Local mock development: admin is intentionally open.
+  if (isMock) return res;
+
+  // Not mock, but Supabase isn't configured → we cannot verify a session, so we
+  // must NOT let anyone in. Send them to the login page, which explains that
+  // authentication is unavailable until Supabase is configured.
+  if (!url || !anon) {
+    return isLogin ? res : NextResponse.redirect(new URL("/admin/login", req.url));
+  }
 
   const supabase = createServerClient(url, anon, {
     cookies: {
