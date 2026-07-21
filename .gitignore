@@ -44,3 +44,6 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# local secret paste helper — never commit
+HOSTINGER_ENV_PASTE.txt
