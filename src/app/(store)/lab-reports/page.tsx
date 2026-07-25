@@ -36,7 +36,9 @@ export default async function LabReportsPage() {
         </h1>
         <p className="text-base font-light leading-relaxed text-navy/65">
           Every batch is independently tested before it ships. Scan the QR on any jar — or find your
-          batch below — to see its exact results.
+          batch below — to see its exact results. All testing is conducted by Jagdamba Laboratories
+          (OPC) Pvt. Ltd., Jaipur — a Government-approved, ISO 9001:2015 and GLP-certified
+          laboratory.
         </p>
       </div>
 

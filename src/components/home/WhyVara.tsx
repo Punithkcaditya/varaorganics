@@ -1,24 +1,28 @@
+import type { ComponentType } from "react";
 import { Section, Eyebrow } from "@/components/ui/layout-primitives";
+import { SproutIcon, LogIcon, FlaskIcon, QrIcon } from "@/components/ui/Icons";
 import type { Product } from "@/types";
 
-const features = [
+type Icon = ComponentType<{ width?: number; height?: number; className?: string }>;
+
+const features: { Icon: Icon; title: string; body: string }[] = [
   {
-    icon: "🐄",
+    Icon: SproutIcon,
     title: "Direct from source farms",
     body: "Own-herd A2 Gir cows in Rajasthan. No brokers, no aggregators — a name behind every litre.",
   },
   {
-    icon: "🪵",
+    Icon: LogIcon,
     title: "Ghani-pressed, not cold-pressed",
     body: "Our oils use the traditional wooden ghani method. The wood absorbs heat and friction differently, preserving flavour compounds machines destroy.",
   },
   {
-    icon: "🔬",
+    Icon: FlaskIcon,
     title: "NABL testing, every batch",
     body: "Every batch tested across many parameters — antibiotics, heavy metals, adulteration. We publish the report on the jar.",
   },
   {
-    icon: "📱",
+    Icon: QrIcon,
     title: "QR-traced to this exact batch",
     body: "Scan the QR on any Vara jar and see the lab report for that specific batch — not a generic certificate.",
   },
@@ -44,11 +48,8 @@ export function WhyVara({ product }: { product: Product }) {
               key={f.title}
               className="flex gap-4 border-b border-ivory/10 pb-7 pt-7 first:pt-0 last:border-0 last:pb-0"
             >
-              <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-lg"
-                aria-hidden="true"
-              >
-                {f.icon}
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold-lt">
+                <f.Icon width={20} height={20} />
               </span>
               <div>
                 <h3 className="mb-1.5 font-serif text-lg font-semibold text-gold-lt">{f.title}</h3>

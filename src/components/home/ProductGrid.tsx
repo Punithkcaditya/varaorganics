@@ -30,12 +30,10 @@ export function ProductGrid({ products }: { products: Product[] }) {
         <p className="py-12 text-navy/60">Products are being restocked. Please check back shortly.</p>
       ) : (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              tag={product.featured ? "Bestseller" : i === 1 ? "New" : undefined}
-            />
+          {/* No sales-claim tags at launch — the brand has no sales history yet
+              (Website Changes §01 — remove BESTSELLER). */}
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}

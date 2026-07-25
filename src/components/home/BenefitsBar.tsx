@@ -1,14 +1,15 @@
 import { Container } from "@/components/ui/layout-primitives";
 import {
   CreditCardIcon,
-  SupportIcon,
+  FlaskIcon,
   TagIcon,
   TruckIcon,
 } from "@/components/ui/Icons";
 
 const benefits = [
   { Icon: CreditCardIcon, title: "Secure Payments", sub: "UPI, cards, net banking & COD" },
-  { Icon: SupportIcon, title: "Here to Help", sub: "Reach us any time you need" },
+  // Website Changes §02: replaced generic "Here to Help".
+  { Icon: FlaskIcon, title: "70-Parameter Tested", sub: "NABL accredited lab, every batch" },
   { Icon: TagIcon, title: "Honest Pricing", sub: "Direct from source, no middlemen" },
   { Icon: TruckIcon, title: "Free Bengaluru Delivery", sub: "On orders over ₹999" },
 ];

@@ -89,22 +89,21 @@ export function Bundle({ bundle }: { bundle: Product }) {
             {added ? "✓ Added to Cart" : "Add Bundle to Cart"}
           </button>
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 bg-ivory p-10 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <span className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded border border-navy/10 bg-white text-3xl">
-              🫙<span className="text-[9px] uppercase tracking-[0.1em] text-navy/50">Ghee 500ml</span>
+        {/* Website Changes §02: replaced the wrong "4OZ BUTTER" stock image with a
+            flat navy panel and the gold Vara wordmark — reads more premium than a
+            wrong stock photo, and needs no asset. */}
+        <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-br from-navy-mid to-navy-deep p-10 text-center">
+          <div>
+            <span className="font-serif text-3xl font-semibold text-ivory">
+              Vara<span className="text-gold">.</span>
             </span>
-            <span className="text-2xl text-navy/20" aria-hidden="true">
-              +
-            </span>
-            <span className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded border border-navy/10 bg-white text-3xl">
-              🍯<span className="text-[9px] uppercase tracking-[0.1em] text-navy/50">Honey</span>
+            <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.3em] text-gold-lt">
+              Organics
             </span>
           </div>
-          <p className="max-w-[240px] text-[12.5px] font-light leading-relaxed text-navy/50">
-            Perfect for daily cooking and your morning routine. Both products carry full NABL lab
-            reports — nothing assumed, everything verifiable.
-          </p>
+          <p className="font-serif text-xl font-semibold text-ivory">The Wellness Starter Bundle</p>
+          <p className="text-sm font-light text-ivory/70">Ghee 500ml + Honey 250g</p>
+          <p className="font-serif text-2xl font-semibold text-gold-lt">₹1,799</p>
         </div>
       </div>
     </Section>

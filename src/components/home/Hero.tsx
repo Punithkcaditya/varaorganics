@@ -39,29 +39,32 @@ export function Hero({
         <div className="flex flex-col justify-center px-6 py-14 md:px-[8%] md:py-20">
           <div className="text-amber mb-3 flex items-center gap-3 text-[11px] font-medium tracking-[0.3em] uppercase">
             <span className="h-px w-6 bg-current" aria-hidden="true" />
-            Farm to kitchen · Rajasthan
+            Farm to kitchen · Gau Organics, Rajasthan
           </div>
 
           <h1 className="text-navy mb-5 font-serif text-[clamp(2.75rem,5vw,4.375rem)] leading-[1.06] font-semibold">
             {headline} <em className="text-amber italic">{headlineEm}</em>
           </h1>
 
-          <p className="text-navy/70 mb-6 max-w-[460px] text-base leading-relaxed font-light">
+          {/* Body colour lifted to navy/70 with bold navy keywords (Website Changes §09). */}
+          <p className="mb-6 max-w-[460px] text-base font-light leading-relaxed text-navy/70">
             Most ghee on your shelf was made by machine, never tested beyond a handful of
             parameters, and sourced through middlemen. Vara is{" "}
-            <strong className="text-navy font-medium">bilona hand-churned</strong>,{" "}
-            <strong className="text-navy font-medium">NABL-tested</strong>, and traced back to a
+            <strong className="font-semibold text-navy">bilona hand-churned</strong>,{" "}
+            <strong className="font-semibold text-navy">NABL-tested</strong>, and traced back to a
             single farm.
           </p>
 
+          {/* Premium differentiator pills — Website Changes §09, Option 1:
+              600 weight, 1.5px border, ivory bg, dark-green check in a light circle. */}
           <ul className="mb-9 flex flex-wrap gap-2">
             {diffPills.map((pill) => (
               <li
                 key={pill}
-                className="border-navy/10 text-navy flex items-center gap-1.5 rounded-full border bg-white px-4 py-1.5 text-xs"
+                className="flex items-center gap-2 rounded-full border-[1.5px] border-navy/30 bg-ivory px-5 py-2.5 text-[15px] font-semibold text-navy"
               >
-                <span className="bg-success flex h-4 w-4 items-center justify-center rounded-full text-white">
-                  <CheckIcon width={10} height={10} />
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1F6B3A]/[0.12] text-[#1F6B3A]">
+                  <CheckIcon width={12} height={12} strokeWidth={3} />
                 </span>
                 {pill}
               </li>

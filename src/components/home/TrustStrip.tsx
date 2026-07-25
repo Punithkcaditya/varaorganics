@@ -1,26 +1,34 @@
-const items = [
-  { icon: "🧪", label: "NABL Tested" },
-  { icon: "🐄", label: "Own Farm Source" },
-  { icon: "📦", label: "Free Blr ₹999+" },
-  { icon: "🔄", label: "7-Day Returns" },
-  { icon: "📱", label: "QR Traced" },
-  { icon: "🪵", label: "Ghani Pressed" },
+import type { ComponentType } from "react";
+import {
+  FlaskIcon,
+  SproutIcon,
+  TruckIcon,
+  RefreshIcon,
+  QrIcon,
+  LogIcon,
+} from "@/components/ui/Icons";
+
+const items: { Icon: ComponentType<{ width?: number; height?: number; className?: string }>; label: string }[] = [
+  { Icon: FlaskIcon, label: "NABL Tested" },
+  { Icon: SproutIcon, label: "Own Farm Source" },
+  { Icon: TruckIcon, label: "Free Blr ₹999+" },
+  { Icon: RefreshIcon, label: "7-Day Returns" },
+  { Icon: QrIcon, label: "QR Traced" },
+  { Icon: LogIcon, label: "Ghani Pressed" },
 ];
 
-/** Paper trust strip. Wraps on mobile, no JS (design). */
+/** Paper trust strip with consistent navy line icons (no emoji). */
 export function TrustStrip() {
   return (
     <div className="border-y border-navy/[0.07] bg-paper px-6 py-4">
       <ul className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-center gap-x-6 gap-y-3">
-        {items.map((item) => (
+        {items.map(({ Icon, label }) => (
           <li
-            key={item.label}
+            key={label}
             className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-navy/60"
           >
-            <span aria-hidden="true" className="text-sm">
-              {item.icon}
-            </span>
-            {item.label}
+            <Icon width={16} height={16} className="text-amber" />
+            {label}
           </li>
         ))}
       </ul>

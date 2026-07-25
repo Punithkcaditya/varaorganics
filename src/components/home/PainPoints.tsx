@@ -1,33 +1,40 @@
+import type { ComponentType } from "react";
 import { Section, Eyebrow } from "@/components/ui/layout-primitives";
+import { FactoryIcon, GearIcon, FlaskIcon, LogIcon } from "@/components/ui/Icons";
 
-const rows = [
+type Icon = ComponentType<{ width?: number; height?: number; className?: string }>;
+
+const rows: {
+  problem: { Icon: Icon; title: string; body: string };
+  answer: { Icon: Icon; title: string; body: string };
+}[] = [
   {
     problem: {
-      icon: "🏭",
+      Icon: FactoryIcon,
       title: "Adulterated & mislabelled",
       body: '"Pure" ghee blended with cheaper fats. "Cold-pressed" oil that went through steel machines. Honey cut with syrup. The label says one thing; the lab says another — but you never see the lab.',
     },
     answer: {
-      icon: "🔬",
+      Icon: FlaskIcon,
       title: "NABL lab tested, every batch",
       body: "Every single batch — independently tested across many parameters before it leaves the farm. Antibiotics, heavy metals, adulteration, fatty-acid profile. You see the actual report for your exact batch.",
     },
   },
   {
     problem: {
-      icon: "⚙️",
+      Icon: GearIcon,
       title: "Industrial shortcuts",
       body: "Cream separated by centrifuge, not hand-churning. Oils extracted in steel presses at high heat. Faster methods that strip the nutrients, flavour and tradition that made these foods worth eating.",
     },
     answer: {
-      icon: "🪵",
+      Icon: LogIcon,
       title: "Bilona & wooden ghani — always",
       body: "Curd hand-churned into butter, then slow-cooked on wood fire. Oils extracted on wooden ghanis — a traditional method the wood treats differently than any machine. Small batches only.",
     },
   },
 ];
 
-/** Two problem→answer rows (design). Static content. */
+/** Two problem→answer rows with consistent line icons (Website Changes §02). */
 export function PainPoints() {
   return (
     <Section tone="white" ariaLabel="Why the pantry has a trust problem">
@@ -47,9 +54,7 @@ export function PainPoints() {
               <p className="mb-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-danger">
                 What most brands do
               </p>
-              <span className="mb-3 block text-3xl" aria-hidden="true">
-                {row.problem.icon}
-              </span>
+              <row.problem.Icon width={28} height={28} className="mb-3 text-danger" />
               <h3 className="mb-2 font-serif text-lg font-semibold text-navy">{row.problem.title}</h3>
               <p className="text-sm font-light leading-relaxed text-navy/60">{row.problem.body}</p>
             </div>
@@ -63,9 +68,7 @@ export function PainPoints() {
               <p className="mb-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-success">
                 What Vara does
               </p>
-              <span className="mb-3 block text-3xl" aria-hidden="true">
-                {row.answer.icon}
-              </span>
+              <row.answer.Icon width={28} height={28} className="mb-3 text-success" />
               <h3 className="mb-2 font-serif text-lg font-semibold text-navy">{row.answer.title}</h3>
               <p className="text-sm font-light leading-relaxed text-navy/60">{row.answer.body}</p>
             </div>

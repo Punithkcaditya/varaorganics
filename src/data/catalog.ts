@@ -7,7 +7,11 @@ import type { Product, ProductImage } from "@/types";
  * extra sizes) are seeded active:false so they never route at launch.
  */
 
-const realProductImageKeys = new Set(["ghee", "honey", "sesame", "groundnut"]);
+// Website Changes §02: the uploaded stock photos were wrong (honey jar for ghee,
+// seeds/peanuts for oils). Reverting to the on-brand coloured placeholders until
+// real product photography is supplied. Add a key here once a real /product-images
+// photo exists for it.
+const realProductImageKeys = new Set<string>([]);
 
 function images(key: string, name: string): ProductImage[] {
   const hasRealImage = realProductImageKeys.has(key);

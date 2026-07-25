@@ -3,7 +3,6 @@
     <stop offset="0" stop-color="#EAF0DC"/><stop offset="1" stop-color="#C6DC9E"/>
   </linearGradient></defs>
   <rect width="800" height="800" fill="url(#g)"/>
-  <text x="400" y="400" font-family="Georgia,serif" font-size="52" fill="#15284C" text-anchor="middle" opacity="0.85">Vara Organics</text>
-  <text x="400" y="470" font-family="system-ui,sans-serif" font-size="26" fill="#15284C" text-anchor="middle" opacity="0.55">Wood Pressed Sesame Oil</text>
-  <text x="400" y="620" font-family="system-ui,sans-serif" font-size="20" fill="#15284C" text-anchor="middle" opacity="0.4">Product photography pending</text>
+  <text x="400" y="392" font-family="Georgia,serif" font-size="46" font-weight="600" fill="#15284C" text-anchor="middle" opacity="0.9">Vara<tspan fill="#E8961C">.</tspan> Organics</text>
+  <text x="400" y="452" font-family="system-ui,sans-serif" font-size="28" fill="#15284C" text-anchor="middle" opacity="0.6">Wood Pressed Sesame Oil</text>
 </svg>

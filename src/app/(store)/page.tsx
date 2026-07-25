@@ -1,9 +1,7 @@
 import { getStoreProducts, getFeaturedProducts, getBundle } from "@/features/products/queries";
 import { getSiteSettings } from "@/features/settings/queries";
-import { PromoBanner } from "@/components/home/PromoBanner";
 import { BenefitsBar } from "@/components/home/BenefitsBar";
 import { Hero } from "@/components/home/Hero";
-import { TrustStrip } from "@/components/home/TrustStrip";
 import { PainPoints } from "@/components/home/PainPoints";
 import { ProductGrid } from "@/components/home/ProductGrid";
 import { WhyVara } from "@/components/home/WhyVara";
@@ -39,15 +37,15 @@ export default async function HomePage() {
       <JsonLd data={organizationSchema()} />
       <JsonLd data={websiteSchema()} />
 
-      <PromoBanner />
-      <BenefitsBar />
+      {/* Static two-column hero (Website Changes §02 — carousel removed). */}
       <Hero
         product={heroProduct}
         variant={heroVariant}
         headline={settings.heroHeadline}
         headlineEm={settings.heroHeadlineEm}
       />
-      <TrustStrip />
+      {/* Single trust strip below the hero (consolidated from two). */}
+      <BenefitsBar />
       <PainPoints />
 
       <div id={PRODUCTS_ANCHOR}>
