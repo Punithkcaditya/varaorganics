@@ -82,9 +82,24 @@ export function CheckoutForm({ freeThreshold }: { freeThreshold: number }) {
         headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json()) as CheckoutResult & { ok: boolean; message?: string };
+      const data = (await res.json()) as CheckoutResult & {
+        ok: boolean;
+        code?: string;
+        message?: string;
+      };
       if (!data.ok) {
-        setSubmitError(data.message ?? "Could not place your order.");
+        // A stale cart (e.g. an item added before a catalogue change, or from an
+        // older mock-data session) references a variant that no longer exists.
+        // Self-heal: clear it and tell the customer to re-add, rather than
+        // showing a cryptic "Unknown item" id.
+        if (data.code === "invalid_item") {
+          clear();
+          setSubmitError(
+            "Some items in your cart are no longer available and have been removed. Please add your products again from the shop.",
+          );
+        } else {
+          setSubmitError(data.message ?? "Could not place your order.");
+        }
         setProcessing(false);
         return;
       }
