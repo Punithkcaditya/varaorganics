@@ -27,7 +27,7 @@ const schema = z.object({
     .array(
       z.object({
         id: z.string().min(1),
-        price: z.number().int().min(0).max(1_000_000),
+        price: z.number().int().min(1).max(1_000_000),
         stock: z.number().int().min(0).max(100_000),
         active: z.boolean(),
       }),
@@ -35,6 +35,60 @@ const schema = z.object({
     .optional(),
 });
 
+const createSchema = z.object({
+  productName: z.string().trim().min(2).max(120),
+  category: z.enum(["ghee", "honey", "oils"]),
+  size: z.string().trim().min(1).max(40),
+  sku: z.string().trim().min(2).max(80).transform((value) => value.toUpperCase()),
+  price: z.number().int().min(1).max(1_000_000),
+  stock: z.number().int().min(0).max(100_000),
+  imageUrl: z.string().trim().max(500).optional(),
+});
+
+function slugify(value: string) {
+  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export async function PUT(req: NextRequest) {
+  const user = await getAdminUser();
+  if (!user) return fail(401, "unauthorized", "Sign in to continue");
+  const parsed = createSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return fail(422, "validation_error", parsed.error.issues[0]?.message ?? "Invalid input");
+  const sb = getAdminSupabase();
+  if (USE_MOCK_DATA || !sb) return fail(503, "not_configured", "Adding products needs a live Supabase connection.");
+  const input = parsed.data;
+  const slug = slugify(input.productName);
+  if (!slug) return fail(422, "validation_error", "Enter a valid product name.");
+
+  try {
+    const { data: product, error: productError } = await sb.from("products").insert({
+      product_name: input.productName, slug, category: input.category, route_prefix: input.category,
+      short_description: `${input.productName}, made with care by Vara Organics.`,
+      long_description: `${input.productName}\n\nEdit this description before publishing.`,
+      active: false, featured: false,
+    }).select("id").single();
+    if (productError) throw productError;
+    const { error: variantError } = await sb.from("product_variants").insert({
+      product_id: product.id, size: input.size, sku: input.sku, price: input.price, stock: input.stock,
+      unit_label: input.size, unit_base: Number.parseInt(input.size, 10) || 1,
+      unit_type: input.size.toLowerCase().includes("g") ? "g" : "ml",
+      route_slug: `${slug}-${slugify(input.size)}`, active: true,
+    });
+    if (variantError) {
+      await sb.from("products").delete().eq("id", product.id);
+      throw variantError;
+    }
+    if (input.imageUrl) {
+      const { error: imageError } = await sb.from("product_images").insert({ product_id: product.id, url: input.imageUrl, alt: input.productName });
+      if (imageError) throw imageError;
+    }
+    revalidatePath("/"); revalidatePath("/shop"); revalidatePath("/admin/products");
+    safeLog("admin/products", "created", { productId: product.id });
+    return ok({ slug });
+  } catch (err) {
+    return serverError("admin/products/create", err);
+  }
+}
 export async function POST(req: NextRequest) {
   const user = await getAdminUser();
   if (!user) return fail(401, "unauthorized", "Sign in to continue");

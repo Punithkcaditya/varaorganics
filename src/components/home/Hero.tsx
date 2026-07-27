@@ -73,7 +73,7 @@ export function Hero({
 
           <div className="mb-12 flex flex-col gap-3">
             <ButtonLink
-              href={`/${product.routePrefix}/${variant.routeSlug}`}
+              href="#home-products"
               className="self-start"
             >
               Shop Vara Ghee — {formatPrice(variant.price)}
@@ -135,7 +135,7 @@ export function Hero({
                 <span className="text-ivory/40 text-[13px] font-light">/ {variant.unitLabel}</span>
               </p>
               <ButtonLink
-                href={`/${product.routePrefix}/${variant.routeSlug}`}
+                href="#home-products"
                 variant="gold"
                 className="px-5 py-2.5"
               >

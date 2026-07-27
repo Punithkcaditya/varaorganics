@@ -19,12 +19,14 @@ import { mapProduct, PRODUCT_SELECT, type ProductRowWithRelations } from "./mapp
  * wrong amount. An empty catalogue surfaces the outage; fake prices hide it.
  */
 
-async function fetchActiveProducts(): Promise<Product[]> {
+async function fetchProducts(activeOnly: boolean): Promise<Product[]> {
   if (USE_MOCK_DATA) return allProducts.filter((p) => p.active);
   const sb = getServerSupabase();
-  if (!sb) return allProducts.filter((p) => p.active);
+  if (!sb) return activeOnly ? allProducts.filter((p) => p.active) : allProducts;
   try {
-    const { data, error } = await sb.from("products").select(PRODUCT_SELECT).eq("active", true);
+    let query = sb.from("products").select(PRODUCT_SELECT);
+    if (activeOnly) query = query.eq("active", true);
+    const { data, error } = await query;
     if (error) throw error;
     return (data as unknown as ProductRowWithRelations[]).map(mapProduct);
   } catch (err) {
@@ -37,15 +39,15 @@ async function fetchActiveProducts(): Promise<Product[]> {
   }
 }
 
-export const getAllProducts = cache(fetchActiveProducts);
+export const getAllProducts = cache(() => fetchProducts(false));
 
 export const getStoreProducts = cache(async (): Promise<Product[]> => {
-  const products = await getAllProducts();
+  const products = await fetchProducts(true);
   return products.filter((p) => !p.isBundle);
 });
 
 export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
-  const products = await getAllProducts();
+  const products = await fetchProducts(true);
   return products.filter((p) => p.featured && !p.isBundle);
 });
 
@@ -118,7 +120,7 @@ export const findByRouteSlug = cache(
 export async function getVariantById(
   variantId: string,
 ): Promise<{ product: Product; variant: ProductVariant } | null> {
-  const products = await getAllProducts();
+  const products = await fetchProducts(true);
   for (const product of products) {
     const variant = product.variants.find((v) => v.id === variantId);
     if (variant) return { product, variant };

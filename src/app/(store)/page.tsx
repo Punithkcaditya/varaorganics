@@ -48,7 +48,7 @@ export default async function HomePage() {
       <BenefitsBar />
       <PainPoints />
 
-      <div id={PRODUCTS_ANCHOR}>
+      <div id={PRODUCTS_ANCHOR} className="scroll-mt-[68px]">
         <ProductGrid products={products} />
       </div>
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { primaryNav } from "@/config/nav";
 import { CloseIcon } from "@/components/ui/Icons";
 
@@ -33,7 +34,7 @@ export function MobileNavigation({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -60,12 +61,13 @@ export function MobileNavigation({
         </Link>
       ))}
       <Link
-        href="/shop"
+        href="/cart"
         onClick={onClose}
         className="mt-4 font-serif text-2xl font-semibold text-gold-lt"
       >
         View Cart ({cartCount})
       </Link>
-    </div>
+    </div>,
+    document.body,
   );
 }

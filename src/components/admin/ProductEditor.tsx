@@ -122,7 +122,7 @@ export function ProductEditor({ product }: { product: Product }) {
                   <td className="px-3 py-2">
                     <input
                       type="number"
-                      min={0}
+                      min={1}
                       aria-label={`Price for ${v.size}`}
                       value={v.price}
                       onChange={(e) => updateVariant(v.id, { price: Number(e.target.value) })}

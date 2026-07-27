@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAdminUser } from "@/lib/supabase/auth";
 import { USE_MOCK_DATA } from "@/lib/validation/env";
+import { AdminLogoutButton } from "@/components/admin/AdminLogoutButton";
 
 export const metadata: Metadata = {
   title: "Admin · Vara Organics",
@@ -48,6 +49,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/" className="text-gold-lt hover:underline">
               View site →
             </Link>
+            <AdminLogoutButton />
           </div>
         </div>
       </header>
