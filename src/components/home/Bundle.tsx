@@ -49,9 +49,7 @@ export function Bundle({ bundle }: { bundle: Product }) {
 
       <div className="mt-11 grid overflow-hidden rounded border border-navy/10 md:grid-cols-2">
         <div className="bg-gradient-to-b from-navy-mid to-navy-deep p-10">
-          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.24em] text-gold">
-            Most Popular Bundle
-          </p>
+          {/* Fix #11: no "Most Popular Bundle" claim — zero sales history yet. */}
           <h3 className="mb-4 font-serif text-2xl font-semibold text-ivory">{bundle.productName}</h3>
           <ul className="mb-7">
             {items.map((item) => (

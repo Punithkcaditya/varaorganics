@@ -43,6 +43,42 @@ function mapImage(i: ProductImagesRow): ProductImage {
   return { id: i.id, url: i.url, alt: i.alt, position: i.position };
 }
 
+/**
+ * Fix #2: on-brand coloured placeholder when a product has no image rows. Keeps
+ * cards from rendering blank once the wrong stock-photo rows are cleared from
+ * the live DB, until real photography is supplied.
+ */
+function placeholderImage(row: ProductsRow): ProductImage {
+  const slug = row.slug ?? "";
+  const key = slug.includes("sesame")
+    ? "sesame"
+    : slug.includes("groundnut")
+      ? "groundnut"
+      : slug.includes("coconut")
+        ? "coconut"
+        : slug.includes("mustard")
+          ? "mustard-honey"
+          : row.category === "honey"
+            ? "honey"
+            : row.is_bundle
+              ? "bundle"
+              : "ghee";
+  return { id: `${row.id}-placeholder`, url: `/placeholders/${key}.svg`, alt: row.product_name, position: 0 };
+}
+
+/** Keep the first occurrence of each parameter name (case-insensitive). */
+function dedupeByName<T extends { name: string }>(rows: T[]): T[] {
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const row of rows) {
+    const key = row.name.trim().toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(row);
+  }
+  return out;
+}
+
 function mapBatch(
   b: ProductBatchesRow & { lab_parameters: LabParametersRow[] | null },
 ): ProductBatch {
@@ -54,16 +90,22 @@ function mapBatch(
     bestBefore: b.best_before,
     labReportUrl: b.lab_report_url,
     active: b.active,
-    labParameters: (b.lab_parameters ?? [])
-      .slice()
-      .sort((a, c) => a.position - c.position)
-      .map((p) => ({
-        id: p.id,
-        name: p.name,
-        result: p.result,
-        status: p.status,
-        position: p.position,
-      })),
+    // Fix #1: de-duplicate by parameter name. A seed run more than once (there
+    // was no unique constraint before migration 0005) leaves duplicate rows,
+    // which made the hero card's slice(0,4) show Moisture/Butyric twice and
+    // drop Antibiotics/Heavy metals. Keep the first (lowest position) of each.
+    labParameters: dedupeByName(
+      (b.lab_parameters ?? [])
+        .slice()
+        .sort((a, c) => a.position - c.position)
+        .map((p) => ({
+          id: p.id,
+          name: p.name,
+          result: p.result,
+          status: p.status,
+          position: p.position,
+        })),
+    ),
   };
 }
 
@@ -96,7 +138,7 @@ export function mapProduct(row: ProductRowWithRelations): Product {
     featured: row.featured,
     isBundle: row.is_bundle,
     variants,
-    images,
+    images: images.length > 0 ? images : [placeholderImage(row)],
     currentBatch: activeBatch ? mapBatch(activeBatch) : null,
   };
 }

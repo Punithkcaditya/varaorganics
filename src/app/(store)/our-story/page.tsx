@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Section, Eyebrow } from "@/components/ui/layout-primitives";
 import { Breadcrumb } from "@/components/learn/Breadcrumb";
 import { JsonLd } from "@/components/schema/JsonLd";
 import { breadcrumbSchema } from "@/components/schema/builders";
 import { buildMetadata } from "@/components/seo/metadata";
+import { getSiteSettings } from "@/features/settings/queries";
 
 export const metadata: Metadata = buildMetadata({
   title: "Our Story",
@@ -22,7 +24,8 @@ const crumbs = [
  * section deliberately omits confidential detail (addresses, licence numbers,
  * legal entity) — those live on the physical label only.
  */
-export default function OurStoryPage() {
+export default async function OurStoryPage() {
+  const { founderPhotoUrl } = await getSiteSettings();
   return (
     <Section tone="ivory" ariaLabel="Our story">
       <JsonLd data={breadcrumbSchema(crumbs)} />
@@ -35,12 +38,23 @@ export default function OurStoryPage() {
           I couldn&apos;t find ghee I could trust. So I built it.
         </h1>
 
-        {/* Founder photo placeholder — real photo to be supplied. */}
+        {/* Founder photo (Fix #7). Renders the uploaded photo when set in admin
+            settings; otherwise a clean paper-tone circle (no decorative dots). */}
         <figure className="mb-8 flex items-center gap-4">
-          <span
-            aria-hidden="true"
-            className="h-[120px] w-[120px] shrink-0 rounded-full border border-navy/15 bg-paper"
-          />
+          {founderPhotoUrl ? (
+            <Image
+              src={founderPhotoUrl}
+              alt="Founder, Vara Organics"
+              width={120}
+              height={120}
+              className="h-[120px] w-[120px] shrink-0 rounded-full border border-navy/15 object-cover"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="h-[120px] w-[120px] shrink-0 rounded-full border border-navy/15 bg-paper"
+            />
+          )}
           <figcaption className="text-sm italic text-navy/55">Founder, Vara Organics</figcaption>
         </figure>
 

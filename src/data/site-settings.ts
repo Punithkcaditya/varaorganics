@@ -9,6 +9,8 @@ export interface SiteSettings {
   heroHeadline: string;
   heroHeadlineEm: string;
   ourStory: string;
+  /** Founder photo shown on Our Story (Fix #7). Empty until a photo is set. */
+  founderPhotoUrl: string;
 }
 
 export const defaultSiteSettings: SiteSettings = {
@@ -19,4 +21,5 @@ export const defaultSiteSettings: SiteSettings = {
   heroHeadlineEm: "Proved, not claimed.",
   ourStory:
     "Vara Organics brings pure A2 Bilona ghee, wood-pressed oils and raw wild honey from Indian farms to Bengaluru kitchens — traditional methods, small batches, nothing added, every batch lab-tested and QR-traceable.",
+  founderPhotoUrl: "",
 };

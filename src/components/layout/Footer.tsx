@@ -19,7 +19,7 @@ export function Footer() {
               {site.description}
             </p>
             <p className="text-[10px] uppercase tracking-[0.2em] text-gold">
-              {fssai} · By {site.legalName} · Bengaluru
+              {fssai} · {site.legalName} · Bengaluru
             </p>
           </div>
           {footerNav.map((col) => (

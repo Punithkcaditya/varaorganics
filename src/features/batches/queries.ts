@@ -14,12 +14,29 @@ export type BatchLookup =
   | { state: "error" };
 
 /**
+ * Fix #6: the QR codes printed on product labels point at friendly, product-
+ * level URLs (/verify/ghee, /verify/honey, /verify/sesame-oil,
+ * /verify/groundnut-oil) rather than a raw batch number. Map those keywords to
+ * the product slug so the same /verify/[batchId] page resolves them to that
+ * product's current active batch.
+ */
+const PRODUCT_KEYWORD_TO_SLUG: Record<string, string> = {
+  ghee: "a2-gir-cow-bilona-ghee",
+  honey: "raw-wild-forest-honey",
+  "sesame-oil": "wood-pressed-sesame-oil",
+  "groundnut-oil": "wood-pressed-groundnut-oil",
+};
+
+/**
  * Look up a batch by its batch number for /verify/[batchId]. Distinguishes
  * valid / inactive / unknown / error so the page can render the right state
  * (Dev Kit §13). Never throws to the page.
  */
 export const lookupBatch = cache(async (batchNumber: string): Promise<BatchLookup> => {
   const normalized = batchNumber.trim();
+
+  const keywordSlug = PRODUCT_KEYWORD_TO_SLUG[normalized.toLowerCase()];
+  if (keywordSlug) return lookupByProductSlug(keywordSlug);
 
   if (USE_MOCK_DATA) return mockLookup(normalized);
 
@@ -69,6 +86,35 @@ export const lookupBatch = cache(async (batchNumber: string): Promise<BatchLooku
     return { state: "error" };
   }
 });
+
+/** Resolve a product (by slug) to its current active batch for /verify/<keyword>. */
+async function lookupByProductSlug(slug: string): Promise<BatchLookup> {
+  const sb = USE_MOCK_DATA ? null : getServerSupabase();
+  if (!sb) {
+    const product = allProducts.find((p) => p.slug === slug);
+    if (!product?.currentBatch) return { state: "unknown" };
+    return product.currentBatch.active
+      ? { state: "valid", batch: product.currentBatch, product }
+      : { state: "inactive", batch: product.currentBatch, product };
+  }
+  try {
+    const { data: productRow, error } = await sb
+      .from("products")
+      .select(PRODUCT_SELECT)
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error) throw error;
+    if (!productRow) return { state: "unknown" };
+    const product = mapProduct(productRow as unknown as ProductRowWithRelations);
+    if (!product.currentBatch) return { state: "unknown" };
+    return product.currentBatch.active
+      ? { state: "valid", batch: product.currentBatch, product }
+      : { state: "inactive", batch: product.currentBatch, product };
+  } catch (err) {
+    safeError("batches", "lookupByProductSlug failed", { err: String(err) });
+    return { state: "error" };
+  }
+}
 
 function mockLookup(batchNumber: string): BatchLookup {
   for (const product of allProducts) {

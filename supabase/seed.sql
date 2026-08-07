@@ -103,12 +103,12 @@ from public.products p
 join (values
   ('a2-gir-cow-bilona-ghee', '250ml', 'VARA-GHEE-250', 799, null::int, 40, '250ml', 250, 'ml', null, false, 0),
   ('a2-gir-cow-bilona-ghee', '500ml', 'VARA-GHEE-500', 1399, null, 50, '500ml', 500, 'ml', 'a2-gir-cow-bilona-ghee-500ml', true, 1),
-  ('a2-gir-cow-bilona-ghee', '1L', 'VARA-GHEE-1000', 2699, 2798, 30, '1L', 1000, 'ml', 'a2-gir-cow-bilona-ghee-1l', true, 2),
-  ('raw-wild-forest-honey', '250g', 'VARA-HONEY-250', 399, null, 60, '250g', 250, 'g', null, false, 0),
+  ('a2-gir-cow-bilona-ghee', '1L', 'VARA-GHEE-1000', 2599, 2798, 30, '1L', 1000, 'ml', 'a2-gir-cow-bilona-ghee-1l', true, 2),
+  ('raw-wild-forest-honey', '250g', 'VARA-HONEY-250', 399, null, 60, '250g', 250, 'g', 'raw-wild-forest-honey-250g', true, 0),
   ('raw-wild-forest-honey', '500g', 'VARA-HONEY-500', 749, null, 45, '500g', 500, 'g', 'raw-wild-forest-honey-500g', true, 1),
   ('raw-wild-forest-honey', '1kg', 'VARA-HONEY-1000', 1399, null, 20, '1kg', 1000, 'g', null, false, 2),
   ('wood-pressed-sesame-oil', '500ml', 'VARA-SESAME-500', 599, null, 35, '500ml', 500, 'ml', null, false, 0),
-  ('wood-pressed-sesame-oil', '1L', 'VARA-SESAME-1000', 1149, null, 30, '1L', 1000, 'ml', 'wood-pressed-sesame-oil-1l', true, 1),
+  ('wood-pressed-sesame-oil', '1L', 'VARA-SESAME-1000', 899, null, 30, '1L', 1000, 'ml', 'wood-pressed-sesame-oil-1l', true, 1),
   ('wood-pressed-groundnut-oil', '1L', 'VARA-GNUT-1000', 849, null, 40, '1L', 1000, 'ml', 'wood-pressed-groundnut-oil-1l', true, 0),
   ('wellness-starter', 'Bundle', 'VARA-BUNDLE-WELLNESS', 1799, 1948, 25, 'bundle', 0, 'g', 'wellness-starter', true, 0),
   ('extra-virgin-coconut-oil', '500ml', 'VARA-COCO-500', 799, null, 0, '500ml', 500, 'ml', null, false, 0),
@@ -164,7 +164,8 @@ join (values
   ('GNT-2024-005','Peroxide value','2.0 meq/kg','Pass',1),
   ('GNT-2024-005','Aflatoxin','Not detected','Pass',2),
   ('GNT-2024-005','Argemone oil','Not detected','Pass',3)
-) as lp(batch_number, name, result, status, position) on bt.batch_number = lp.batch_number;
+) as lp(batch_number, name, result, status, position) on bt.batch_number = lp.batch_number
+on conflict (batch_id, name) do nothing;
 
 -- ══════════════ LEARN ARTICLES (7 launch) ══════════════
 insert into public.learn_content (slug, title, excerpt, category, cover_image, body_markdown, faqs, meta_title, meta_description, read_time, related_product, published, enable_howto_schema)

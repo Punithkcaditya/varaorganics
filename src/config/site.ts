@@ -7,15 +7,14 @@ import { SITE_URL } from "@/lib/validation/env";
  */
 export const site = {
   name: "Vara Organics",
-  legalName: "Varixa Global",
+  legalName: "Varixa Global Ventures Pvt. Ltd.",
   tagline: "Nature's Finest Gift",
   description:
     "Pure A2 Gir Cow Bilona ghee, wood-pressed oils and raw wild forest honey from Indian farms. Traditional methods, small batches, NABL lab-tested, nothing added.",
   url: SITE_URL,
   locale: "en_IN",
-  // FSSAI licence shown in the footer. Empty until confirmed — never fabricate.
-  // (Design shows "apply pending".) Set via site_settings when issued.
-  fssaiLicence: "",
+  // FSSAI Central Licence, issued to Varixa Global Ventures Pvt. Ltd. (Fix #19).
+  fssaiLicence: "11226998000505",
   social: {
     instagram: "https://www.instagram.com/varaorganics",
     facebook: "https://www.facebook.com/varaorganics",

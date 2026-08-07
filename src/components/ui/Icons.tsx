@@ -228,6 +228,16 @@ export function FactoryIcon(props: IconProps) {
   );
 }
 
+/** Flame — bilona ghee slow-cooked on a wood fire (Fix #10). */
+export function FlameIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 2c1 4 4 5 4 9a4 4 0 0 1-8 0c0-1.5.5-2.5 1-3 .3 1 .8 1.6 1.5 2 .1-3-1-5 1.5-8z" />
+      <path d="M8.5 14a3.5 3.5 0 0 0 7 0" />
+    </svg>
+  );
+}
+
 /** Gear — machine processing (pain point). */
 export function GearIcon(props: IconProps) {
   return (

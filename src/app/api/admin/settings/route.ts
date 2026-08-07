@@ -16,6 +16,7 @@ const schema = z.object({
   freeShippingThreshold: z.number().int().min(0).max(100000),
   heroHeadline: z.string().trim().min(3).max(200),
   heroHeadlineEm: z.string().trim().max(200),
+  founderPhotoUrl: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 export async function POST(req: NextRequest) {

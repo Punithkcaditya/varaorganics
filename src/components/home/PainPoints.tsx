@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { Section, Eyebrow } from "@/components/ui/layout-primitives";
-import { FactoryIcon, GearIcon, FlaskIcon, LogIcon } from "@/components/ui/Icons";
+import { FactoryIcon, GearIcon, FlaskIcon, FlameIcon } from "@/components/ui/Icons";
 
 type Icon = ComponentType<{ width?: number; height?: number; className?: string }>;
 
@@ -27,7 +27,7 @@ const rows: {
       body: "Cream separated by centrifuge, not hand-churning. Oils extracted in steel presses at high heat. Faster methods that strip the nutrients, flavour and tradition that made these foods worth eating.",
     },
     answer: {
-      Icon: LogIcon,
+      Icon: FlameIcon,
       title: "Bilona & wooden ghani — always",
       body: "Curd hand-churned into butter, then slow-cooked on wood fire. Oils extracted on wooden ghanis — a traditional method the wood treats differently than any machine. Small batches only.",
     },

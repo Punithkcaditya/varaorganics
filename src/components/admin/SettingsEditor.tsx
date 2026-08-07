@@ -10,6 +10,7 @@ export function SettingsEditor({ settings }: { settings: SiteSettings }) {
   const [threshold, setThreshold] = useState(settings.freeShippingThreshold);
   const [heroHeadline, setHeroHeadline] = useState(settings.heroHeadline);
   const [heroHeadlineEm, setHeroHeadlineEm] = useState(settings.heroHeadlineEm);
+  const [founderPhotoUrl, setFounderPhotoUrl] = useState(settings.founderPhotoUrl ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
 
@@ -25,6 +26,7 @@ export function SettingsEditor({ settings }: { settings: SiteSettings }) {
           freeShippingThreshold: Number(threshold),
           heroHeadline,
           heroHeadlineEm,
+          founderPhotoUrl,
         }),
       });
       const data = await res.json();
@@ -82,6 +84,20 @@ export function SettingsEditor({ settings }: { settings: SiteSettings }) {
         Preview: <strong className="text-navy">{heroHeadline}</strong>{" "}
         <em className="text-amber">{heroHeadlineEm}</em>
       </p>
+
+      <Field label="Founder photo URL (Our Story page)" htmlFor="founderPhotoUrl">
+        <input
+          id="founderPhotoUrl"
+          value={founderPhotoUrl}
+          onChange={(e) => setFounderPhotoUrl(e.target.value)}
+          placeholder="https://…/founder.jpg"
+          className={inputClass(false)}
+        />
+        <p className="mt-1 text-xs text-navy/45">
+          Paste the image URL after uploading it (e.g. to Supabase Storage). Leave blank to show the
+          placeholder.
+        </p>
+      </Field>
 
       {message && (
         <p

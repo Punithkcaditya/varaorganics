@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="A2 Gir Cow Bilona Ghee">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#F6EDD4"/><stop offset="1" stop-color="#EAD08A"/>
-  </linearGradient></defs>
-  <rect width="800" height="800" fill="url(#g)"/>
+  <rect width="800" height="800" fill="#F6EDD4"/>
   <text x="400" y="392" font-family="Georgia,serif" font-size="46" font-weight="600" fill="#15284C" text-anchor="middle" opacity="0.9">Vara<tspan fill="#E8961C">.</tspan> Organics</text>
   <text x="400" y="452" font-family="system-ui,sans-serif" font-size="28" fill="#15284C" text-anchor="middle" opacity="0.6">A2 Gir Cow Bilona Ghee</text>
 </svg>

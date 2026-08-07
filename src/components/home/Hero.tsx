@@ -1,5 +1,6 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { CheckIcon } from "@/components/ui/Icons";
+import { HeroAddToCart } from "./HeroAddToCart";
 import { formatPrice } from "@/lib/utils";
 import type { Product, ProductVariant } from "@/types";
 
@@ -99,7 +100,9 @@ export function Hero({
         </div>
 
         {/* Right: product + live lab preview */}
-        <div className="from-navy-mid to-navy-deep relative flex items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-12 md:px-[5%]">
+        {/* Fix #20: card starts ~30% down instead of dead-centre — less empty
+            space above it on tall viewports. */}
+        <div className="from-navy-mid to-navy-deep relative flex items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-12 md:items-start md:justify-center md:px-[5%] md:pt-[9%]">
           <div className="border-gold-lt/20 w-full max-w-[340px] rounded-lg border bg-white/[0.06] p-6">
             <p className="text-gold-lt/70 mb-3 text-[9.5px] font-semibold tracking-[0.28em] uppercase">
               Featured product
@@ -134,13 +137,7 @@ export function Hero({
                 {formatPrice(variant.price)}{" "}
                 <span className="text-ivory/40 text-[13px] font-light">/ {variant.unitLabel}</span>
               </p>
-              <ButtonLink
-                href="#home-products"
-                variant="gold"
-                className="px-5 py-2.5"
-              >
-                View
-              </ButtonLink>
+              <HeroAddToCart product={product} variant={variant} />
             </div>
           </div>
         </div>

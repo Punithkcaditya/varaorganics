@@ -129,7 +129,7 @@ Every batch is independently NABL lab-tested before it ships. Scan the QR on you
         productId: "prod-ghee",
         size: "1L",
         sku: "VARA-GHEE-1000",
-        price: 2699, // CONFIRM
+        price: 2599, // Fix #9 — confirmed price
         compareAtPrice: 2798,
         stock: 30,
         unitLabel: "1L",
@@ -229,8 +229,8 @@ Batch-tested for purity markers. Scan the QR on your jar to see the report.`,
         unitLabel: "250g",
         unitBase: 250,
         unitType: "g",
-        active: false,
-        routeSlug: null,
+        active: true, // Fix #24 — 250g now sold alongside 500g
+        routeSlug: "raw-wild-forest-honey-250g",
       },
       {
         id: "var-honey-500",
@@ -355,7 +355,7 @@ Our sesame oil is extracted on a wooden ghani (kolhu), the traditional slow-pres
         productId: "prod-sesame",
         size: "1L",
         sku: "VARA-SESAME-1000",
-        price: 1149, // CONFIRM
+        price: 899, // Fix #8 — corrected price
         compareAtPrice: null,
         stock: 30,
         unitLabel: "1L",
