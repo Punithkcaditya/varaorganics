@@ -9,9 +9,12 @@ import { QRProof } from "@/components/home/QRProof";
 import { Process } from "@/components/home/Process";
 import { Bundle } from "@/components/home/Bundle";
 import { FirstOrderCTA } from "@/components/home/FirstOrderCTA";
+import { CategoryQuickNav } from "@/components/home/CategoryQuickNav";
 import { StickyCart } from "@/components/layout/StickyCart";
 import { JsonLd } from "@/components/schema/JsonLd";
 import { organizationSchema, websiteSchema } from "@/components/schema/builders";
+import { categoryLabel } from "@/lib/utils";
+import type { Category } from "@/types";
 
 // Homepage: SSG with ISR (Dev Kit §06 — revalidate 60s for price freshness).
 export const revalidate = 60;
@@ -31,6 +34,13 @@ export default async function HomePage() {
   const heroVariant =
     heroProduct.variants.find((v) => v.active && v.routeSlug?.endsWith("500ml")) ??
     heroProduct.variants.find((v) => v.active)!;
+  const availableCategories = (["ghee", "honey", "oils"] as Category[])
+    .map((category) => ({
+      key: category,
+      label: categoryLabel(category),
+      count: products.filter((product) => product.category === category).length,
+    }))
+    .filter((category) => category.count > 0);
 
   return (
     <>
@@ -38,12 +48,15 @@ export default async function HomePage() {
       <JsonLd data={websiteSchema()} />
 
       {/* Static two-column hero (Website Changes §02 — carousel removed). */}
-      <Hero
-        product={heroProduct}
-        variant={heroVariant}
-        headline={settings.heroHeadline}
-        headlineEm={settings.heroHeadlineEm}
-      />
+      <div id="home-hero">
+        <Hero
+          product={heroProduct}
+          variant={heroVariant}
+          headline={settings.heroHeadline}
+          headlineEm={settings.heroHeadlineEm}
+        />
+      </div>
+      <CategoryQuickNav categories={availableCategories} />
       {/* Single trust strip below the hero (consolidated from two). */}
       <BenefitsBar />
       <PainPoints />
