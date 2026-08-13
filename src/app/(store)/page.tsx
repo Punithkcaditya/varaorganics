@@ -48,7 +48,7 @@ export default async function HomePage() {
       <JsonLd data={websiteSchema()} />
 
       {/* Static two-column hero (Website Changes §02 — carousel removed). */}
-      <div id="home-hero">
+      <div>
         <Hero
           product={heroProduct}
           variant={heroVariant}

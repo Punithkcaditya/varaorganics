@@ -43,20 +43,23 @@ function CategoryIcon({ category }: { category?: Category }) {
   );
 }
 
-/** Appears after the homepage hero leaves view and links to live collections. */
+/** Appears as soon as scrolling starts and links to live product collections. */
 export function CategoryQuickNav({ categories }: { categories: CategoryLink[] }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const hero = document.getElementById("home-hero");
-    if (!hero) return;
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setVisible(window.scrollY > 8));
+    };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry ? !entry.isIntersecting : false),
-      { rootMargin: "-68px 0px 0px", threshold: 0 },
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+    };
   }, []);
 
   if (categories.length === 0) return null;
