@@ -31,6 +31,19 @@ shipment creation for a failed order (§09).
 | `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` | Dashboard credentials. |
 | `SHIPROCKET_PICKUP_LOCATION` | Pickup nickname configured in Shiprocket. **Never hardcode an unconfirmed pickup address** — confirm the Bengaluru pickup before go-live (Dev Kit §09). |
 
+## Tracking webhook
+
+Configure Shiprocket's shipment webhook with this neutral public URL:
+
+```text
+https://www.varaorganic.com/api/shipping/status
+```
+
+Shiprocket rejects webhook URLs containing reserved provider terms, so do not
+use the internal `/api/shiprocket/webhook` path in its dashboard. Select
+`x-api-key` as the token type and enter the same secret stored in
+`SHIPROCKET_WEBHOOK_SECRET`.
+
 ## Mock mode
 
 Returns a simulated shipment (`SHIP-MOCK-*`, random AWB) so orders complete offline without

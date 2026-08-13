@@ -66,6 +66,7 @@ const serverSchema = z.object({
   SHIPROCKET_PASSWORD: z.string().optional(),
   SHIPROCKET_PICKUP_LOCATION: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+  RESEND_AUDIENCE_ID: z.string().optional(),
   ORDER_NOTIFICATION_EMAIL: z.string().email().optional().or(z.literal("")),
   EMAIL_FROM: z.string().optional(),
   REVALIDATE_SECRET: z.string().optional(),

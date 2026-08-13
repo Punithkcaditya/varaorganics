@@ -27,7 +27,7 @@ For Hostinger plans with Node.js app support (hPanel → **Website → Node.js**
 6. **Environment variables:** add every var from [.env.example](.env.example) in the Node.js app's
    Environment section. Set `NEXT_PUBLIC_USE_MOCK_DATA=false` and `NEXT_PUBLIC_SITE_URL` to the real
    domain. Do **not** upload `.env.local`.
-7. **Domain:** point `www.varaorganics.com` to the app; set the app's application URL.
+7. **Domain:** point `www.varaorganic.com` to the app; set the app's application URL.
 8. **SSL:** enable the free Let's Encrypt certificate in hPanel (SSL → install). Force HTTPS.
 9. **Build output:** keep `.next/` from the build; do not delete it between deploys. Persist
    `node_modules` or reinstall on each deploy.
@@ -66,7 +66,7 @@ pm2 save && pm2 startup   # run the printed command to enable boot start
 
 ```nginx
 server {
-  server_name www.varaorganics.com varaorganics.com;
+  server_name www.varaorganic.com varaorganic.com;
   location / {
     proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;
@@ -87,7 +87,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 # 5. HTTPS
 sudo apt -y install certbot python3-certbot-nginx
-sudo certbot --nginx -d www.varaorganics.com -d varaorganics.com
+sudo certbot --nginx -d www.varaorganic.com -d varaorganic.com
 
 # 6. Zero-downtime redeploy
 cd /var/www/vara && git pull && npm ci && npm run build && pm2 reload vara --update-env
@@ -119,7 +119,7 @@ Two endpoints are designed to be triggered on a schedule. Both require the
 ```bash
 crontab -e
 # 09:00 IST = 03:30 UTC. Set the server TZ to Asia/Kolkata, or use UTC as below.
-30 3 * * 1 curl -fsS -X POST https://www.varaorganics.com/api/reports/weekly \
+30 3 * * 1 curl -fsS -X POST https://www.varaorganic.com/api/reports/weekly \
   -H "x-admin-secret: YOUR_REVALIDATE_SECRET" >> /var/log/vara-weekly.log 2>&1
 ```
 
@@ -130,7 +130,7 @@ crontab -e
 select cron.schedule(
   'vara-weekly-report', '30 3 * * 1',
   $$select net.http_post(
-      url := 'https://www.varaorganics.com/api/reports/weekly',
+      url := 'https://www.varaorganic.com/api/reports/weekly',
       headers := '{"x-admin-secret":"YOUR_REVALIDATE_SECRET"}'::jsonb
     )$$
 );
@@ -148,7 +148,7 @@ Script:
 function refreshVaraPnL() {
   const month = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM');
   const res = UrlFetchApp.fetch(
-    'https://www.varaorganics.com/api/monthly-report?month=' + month,
+    'https://www.varaorganic.com/api/monthly-report?month=' + month,
     { headers: { 'x-admin-secret': 'YOUR_REVALIDATE_SECRET' } }
   );
   const data = JSON.parse(res.getContentText());
@@ -174,7 +174,7 @@ Set an Apps Script time-driven trigger (monthly) to run it.
 
 - [ ] `NEXT_PUBLIC_USE_MOCK_DATA=false` and Supabase/Razorpay/Shiprocket/Resend vars set.
 - [ ] Supabase migrations + seed applied ([DATABASE.md](DATABASE.md)).
-- [ ] Razorpay webhook → `https://www.varaorganics.com/api/razorpay/webhook` with the webhook secret.
+- [ ] Razorpay webhook → `https://www.varaorganic.com/api/razorpay/webhook` with the webhook secret.
 - [ ] Supabase DB webhook → `/api/revalidate` with the `x-revalidate-secret` header.
 - [ ] `view-source` on `/` and a product page shows full HTML (not an empty div).
 - [ ] `robots.txt` and `sitemap.xml` load; HTTPS enforced.

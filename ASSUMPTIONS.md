@@ -59,7 +59,7 @@ Supabase URL/keys, Razorpay key id/secret/webhook secret, Shiprocket email/passw
     all prior work specify Hostinger, and deployment is already under way there.
     → **Confirmed: stay on Hostinger.** Behaviour is identical either way (both run a Node server).
 18. **Domain — `.in` vs `.com`.** The Tech Stack doc says `varaorganics.in`; every canonical,
-    sitemap entry and schema uses `varaorganics.com`. → **Confirmed: `.com`.**
+    sitemap entry and schema uses `varaorganic.com`. → **Confirmed: `.com`.**
 19. **Next.js 14 (doc) vs 16 (built).** Same resolution as B1 — latest stable.
 20. **Denormalized schema in the Tech Stack doc** (products.variants jsonb, batches, inventory)
     conflicts with our normalized schema (see ARCHITECTURE C4). → Kept normalized; the doc's

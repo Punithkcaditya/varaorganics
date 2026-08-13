@@ -43,3 +43,39 @@ export async function notifyInternal(subject: string, html: string): Promise<voi
   if (!to) return;
   await sendEmail({ to, subject, html });
 }
+
+export type SubscribeResult = { ok: boolean; reason?: "not_configured" | "error" };
+
+/**
+ * Add an email to the Resend marketing Audience (newsletter signups). No-op
+ * success in mock mode / when unconfigured so the form still works offline.
+ * `already-subscribed` is treated as success — the visitor doesn't care.
+ */
+export async function addContact(params: {
+  email: string;
+  firstName?: string;
+}): Promise<SubscribeResult> {
+  const apiKey = optionalServerEnv("RESEND_API_KEY");
+  const audienceId = optionalServerEnv("RESEND_AUDIENCE_ID");
+
+  if (USE_MOCK_DATA || !apiKey || !audienceId) {
+    safeLog("resend", "contact add suppressed (mock/unconfigured)");
+    return { ok: true, reason: "not_configured" };
+  }
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.contacts.create({
+      audienceId,
+      email: params.email,
+      firstName: params.firstName,
+      unsubscribed: false,
+    });
+    // Resend returns an error when the contact already exists — that's fine.
+    if (error && !/already/i.test(error.message ?? "")) throw error;
+    return { ok: true };
+  } catch (err) {
+    safeError("resend", "addContact failed", { err: String(err) });
+    return { ok: false, reason: "error" };
+  }
+}

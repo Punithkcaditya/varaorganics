@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { footerNav } from "@/config/nav";
 import { site } from "@/config/site";
+import { NewsletterSignup } from "@/components/marketing/NewsletterSignup";
 
 /** Deep-navy footer, 4-column → 2-column on mobile (design). */
 export function Footer() {
@@ -18,9 +19,10 @@ export function Footer() {
             <p className="mb-5 max-w-xs text-[13px] font-light leading-relaxed text-ivory/45">
               {site.description}
             </p>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-gold">
+            <p className="mb-8 text-[10px] uppercase tracking-[0.2em] text-gold">
               {fssai} · {site.legalName} · Bengaluru
             </p>
+            <NewsletterSignup />
           </div>
           {footerNav.map((col) => (
             <div key={col.title}>

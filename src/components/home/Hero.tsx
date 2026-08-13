@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/Button";
-import { CheckIcon } from "@/components/ui/Icons";
+import { CheckIcon, QrIcon } from "@/components/ui/Icons";
 import { HeroAddToCart } from "./HeroAddToCart";
 import { formatPrice } from "@/lib/utils";
 import type { Product, ProductVariant } from "@/types";
@@ -99,11 +99,12 @@ export function Hero({
           </dl>
         </div>
 
-        {/* Right: product + live lab preview */}
-        {/* Fix #20: card starts ~30% down instead of dead-centre — less empty
-            space above it on tall viewports. */}
-        <div className="from-navy-mid to-navy-deep relative flex items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-12 md:items-start md:justify-center md:px-[5%] md:pt-[9%]">
-          <div className="border-gold-lt/20 w-full max-w-[340px] rounded-lg border bg-white/[0.06] p-6">
+        {/* Right: product + live lab preview. Card is vertically centred and
+            paired with a QR trust line so the navy panel reads as intentional
+            (no dead space below the card). */}
+        <div className="from-navy-mid to-navy-deep relative flex items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-12 md:px-[5%] md:py-16">
+          <div className="flex w-full max-w-[340px] flex-col gap-4">
+          <div className="border-gold-lt/20 w-full rounded-lg border bg-white/[0.06] p-6">
             <p className="text-gold-lt/70 mb-3 text-[9.5px] font-semibold tracking-[0.28em] uppercase">
               Featured product
             </p>
@@ -139,6 +140,18 @@ export function Hero({
               </p>
               <HeroAddToCart product={product} variant={variant} />
             </div>
+          </div>
+
+          {/* Trust line — fills the panel and reinforces the QR promise. */}
+          <div className="flex items-center gap-3 rounded-lg border border-gold-lt/15 bg-white/[0.03] px-5 py-4">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold-lt">
+              <QrIcon width={18} height={18} />
+            </span>
+            <p className="text-xs font-light leading-relaxed text-ivory/55">
+              Every jar carries the lab report for its exact batch.{" "}
+              <span className="text-ivory/80">Scan the QR to verify before you buy.</span>
+            </p>
+          </div>
           </div>
         </div>
       </div>

@@ -34,6 +34,7 @@ export function ProductCard({
   const selected = activeVariants.find((v) => v.id === selectedId) ?? defaultVariant;
   const addItem = useCart((s) => s.addItem);
   const [added, setAdded] = useState(false);
+  const [hasAdded, setHasAdded] = useState(false);
 
   const href = selected.routeSlug
     ? `/${product.routePrefix}/${selected.routeSlug}`
@@ -57,6 +58,7 @@ export function ProductCard({
       quantity: 1,
     });
     setAdded(true);
+    setHasAdded(true);
     setTimeout(() => setAdded(false), 1600);
   }
 
@@ -136,13 +138,23 @@ export function ProductCard({
         )}
 
         {inStock ? (
-          <button
-            type="button"
-            onClick={add}
-            className="mt-auto w-full rounded-[2px] bg-navy py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-amber"
-          >
-            {added ? "✓ Added to Cart" : "Add to Cart"}
-          </button>
+          <div className="mt-auto">
+            <button
+              type="button"
+              onClick={add}
+              className="w-full rounded-[2px] bg-navy py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-amber"
+            >
+              {added ? "✓ Added to Cart" : "Add to Cart"}
+            </button>
+            {hasAdded && (
+              <Link
+                href="/cart"
+                className="mt-2 block w-full rounded-[2px] border border-amber py-2.5 text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-amber transition-colors hover:bg-amber hover:text-ivory"
+              >
+                Proceed to Cart →
+              </Link>
+            )}
+          </div>
         ) : (
           <Link
             href={`/contact?product=${encodeURIComponent(product.productName)}`}
