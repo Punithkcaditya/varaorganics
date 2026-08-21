@@ -59,7 +59,10 @@ async function buildOrder(input: CreateOrderInput): Promise<{
     const { product, variant } = resolved;
     if (!variant.active) throw new OrderError("invalid_item", `Item unavailable: ${variant.sku}`);
     if (variant.stock < line.quantity) {
-      throw new OrderError("out_of_stock", `Insufficient stock for ${product.productName} ${variant.size}`);
+      throw new OrderError(
+        "out_of_stock",
+        `Insufficient stock for ${product.productName} ${variant.size}`,
+      );
     }
     if (!batchNumber && product.currentBatch?.active) {
       batchNumber = product.currentBatch.batchNumber;
@@ -194,7 +197,9 @@ export async function finalizePaidOrder(
 ): Promise<Order | null> {
   const order = await getOrder(orderId);
   if (!order) return null;
-  if (order.paymentStatus === "paid" && order.fulfillmentStatus !== "unfulfilled") {
+  const paymentAlreadyConfirmed =
+    order.paymentStatus === "paid" || order.paymentStatus === "cod_pending";
+  if (paymentAlreadyConfirmed && order.fulfillmentStatus !== "unfulfilled") {
     return order; // already processed
   }
 
@@ -241,6 +246,9 @@ async function notifyCustomerWhatsApp(order: Order, shipped: boolean) {
 }
 
 async function sendConfirmation(order: Order, shipped: boolean) {
+  // A confirmation is sent only from the successful finalization path: after
+  // Razorpay signature/webhook verification, or immediately for an accepted
+  // COD order. Email delivery is best-effort and never rolls back a paid order.
   const email =
     order.paymentMethod === "cod" ? codConfirmationEmail(order) : orderConfirmationEmail(order);
   await sendEmail({ to: order.email, subject: email.subject, html: email.html });

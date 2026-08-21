@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/features/cart/store";
 import type { Product, ProductVariant } from "@/types";
@@ -10,7 +11,7 @@ import type { Product, ProductVariant } from "@/types";
  */
 export function HeroAddToCart({ product, variant }: { product: Product; variant: ProductVariant }) {
   const addItem = useCart((s) => s.addItem);
-  const [added, setAdded] = useState(false);
+  const [hasAdded, setHasAdded] = useState(false);
 
   function add() {
     addItem({
@@ -25,17 +26,28 @@ export function HeroAddToCart({ product, variant }: { product: Product; variant:
       image: product.images[0]?.url ?? null,
       quantity: 1,
     });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1600);
+    setHasAdded(true);
   }
 
   return (
-    <button
-      type="button"
-      onClick={add}
-      className="rounded-[2px] bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-navy transition-colors hover:bg-gold-lt"
-    >
-      {added ? "✓ Added" : "Add to Cart"}
-    </button>
+    <div className="min-w-[132px]" aria-live="polite">
+      {hasAdded ? (
+        <Link
+          href="/cart"
+          aria-label={`${product.productName} added. Proceed to cart`}
+          className="border-gold-lt bg-ivory text-navy hover:bg-gold-lt focus-visible:outline-gold-lt flex min-h-11 w-full items-center justify-center rounded-[2px] border px-4 text-[10px] font-bold tracking-[0.11em] whitespace-nowrap uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          Proceed to Cart&nbsp;→
+        </Link>
+      ) : (
+        <button
+          type="button"
+          onClick={add}
+          className="bg-gold text-navy hover:bg-gold-lt focus-visible:outline-gold-lt min-h-11 w-full rounded-[2px] px-4 text-[11px] font-semibold tracking-[0.12em] whitespace-nowrap uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          Add to Cart
+        </button>
+      )}
+    </div>
   );
 }

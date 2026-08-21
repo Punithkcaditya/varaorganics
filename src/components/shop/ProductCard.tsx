@@ -33,7 +33,6 @@ export function ProductCard({
   const [selectedId, setSelectedId] = useState(defaultVariant.id);
   const selected = activeVariants.find((v) => v.id === selectedId) ?? defaultVariant;
   const addItem = useCart((s) => s.addItem);
-  const [added, setAdded] = useState(false);
   const [hasAdded, setHasAdded] = useState(false);
 
   const href = selected.routeSlug
@@ -57,13 +56,11 @@ export function ProductCard({
       image: image?.url ?? null,
       quantity: 1,
     });
-    setAdded(true);
     setHasAdded(true);
-    setTimeout(() => setAdded(false), 1600);
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-[3px] border border-navy/10 bg-white transition-shadow hover:shadow-[0_16px_44px_rgba(21,40,76,0.11)]">
+    <article className="group border-navy/10 flex flex-col overflow-hidden rounded-[3px] border bg-white transition-shadow hover:shadow-[0_16px_44px_rgba(21,40,76,0.11)]">
       <Link href={href} className="relative block" aria-label={product.productName}>
         <div className={cn("relative", featured ? "aspect-[4/3]" : "aspect-square")}>
           {image && (
@@ -76,17 +73,17 @@ export function ProductCard({
             />
           )}
           {tag && (
-            <span className="absolute left-2.5 top-2.5">
+            <span className="absolute top-2.5 left-2.5">
               <Badge tone={tag === "Hero Product" ? "navy" : "amber"}>{tag}</Badge>
             </span>
           )}
           {save && (
-            <span className="absolute right-2.5 top-2.5">
+            <span className="absolute top-2.5 right-2.5">
               <Badge tone="premium">{save}% off</Badge>
             </span>
           )}
           {!inStock && (
-            <span className="absolute inset-x-0 bottom-0 bg-navy/85 py-1 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-ivory">
+            <span className="bg-navy/85 text-ivory absolute inset-x-0 bottom-0 py-1 text-center text-[10px] font-semibold tracking-[0.14em] uppercase">
               Out of stock
             </span>
           )}
@@ -94,7 +91,7 @@ export function ProductCard({
       </Link>
 
       <div className="flex flex-1 flex-col p-3">
-        <h3 className="mb-1 line-clamp-2 min-h-[2.4em] font-serif text-[15px] font-semibold leading-tight text-navy">
+        <h3 className="text-navy mb-1 line-clamp-2 min-h-[2.4em] font-serif text-[15px] leading-tight font-semibold">
           <Link href={href} className="hover:text-amber">
             {product.productName}
           </Link>
@@ -103,14 +100,14 @@ export function ProductCard({
         {/* Rating slot — intentionally empty until real review data exists. */}
 
         <div className="mb-2.5 flex items-baseline gap-2">
-          <span className="text-base font-semibold text-navy">{formatPrice(selected.price)}</span>
+          <span className="text-navy text-base font-semibold">{formatPrice(selected.price)}</span>
           {selected.compareAtPrice && (
-            <span className="text-xs font-light text-navy/40 line-through">
+            <span className="text-navy/40 text-xs font-light line-through">
               {formatPrice(selected.compareAtPrice)}
             </span>
           )}
         </div>
-        {unit && <p className="-mt-2 mb-2.5 text-[11px] font-light text-navy/40">{unit}</p>}
+        {unit && <p className="text-navy/40 -mt-2 mb-2.5 text-[11px] font-light">{unit}</p>}
 
         {activeVariants.length > 1 ? (
           <div className="mb-3 flex flex-wrap gap-1" role="group" aria-label="Select size">
@@ -132,33 +129,35 @@ export function ProductCard({
             ))}
           </div>
         ) : (
-          <p className="mb-3 text-[11px] font-light uppercase tracking-[0.1em] text-navy/40">
+          <p className="text-navy/40 mb-3 text-[11px] font-light tracking-[0.1em] uppercase">
             {selected.unitLabel}
           </p>
         )}
 
         {inStock ? (
-          <div className="mt-auto">
-            <button
-              type="button"
-              onClick={add}
-              className="w-full rounded-[2px] bg-navy py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-amber"
-            >
-              {added ? "✓ Added to Cart" : "Add to Cart"}
-            </button>
-            {hasAdded && (
+          <div className="mt-auto" aria-live="polite">
+            {hasAdded ? (
               <Link
                 href="/cart"
-                className="mt-2 block w-full rounded-[2px] border border-amber py-2.5 text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-amber transition-colors hover:bg-amber hover:text-ivory"
+                aria-label={`${product.productName} added. Proceed to cart`}
+                className="bg-gold text-navy hover:bg-gold-lt focus-visible:outline-amber flex min-h-11 w-full items-center justify-center rounded-[2px] px-1.5 text-center text-[10px] font-bold tracking-[0.08em] whitespace-nowrap uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                Proceed to Cart →
+                Proceed to Cart&nbsp;→
               </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={add}
+                className="bg-navy text-ivory hover:bg-amber focus-visible:outline-amber min-h-11 w-full rounded-[2px] px-1.5 text-[10px] font-semibold tracking-[0.1em] whitespace-nowrap uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-[11px] sm:tracking-[0.14em]"
+              >
+                Add to Cart
+              </button>
             )}
           </div>
         ) : (
           <Link
             href={`/contact?product=${encodeURIComponent(product.productName)}`}
-            className="mt-auto w-full rounded-[2px] border border-navy/25 py-2.5 text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-navy transition-colors hover:border-amber hover:text-amber"
+            className="border-navy/25 text-navy hover:border-amber hover:text-amber mt-auto w-full rounded-[2px] border py-2.5 text-center text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors"
           >
             Notify Me
           </Link>
