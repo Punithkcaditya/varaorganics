@@ -111,17 +111,55 @@ export interface Article {
   updatedAt: string;
 }
 
+/** Languages offered by the combos page toggle (Kannada default). */
+export type Language = "kannada" | "hindi" | "telugu" | "tamil" | "english";
+
+/** One product line inside a combo (for display of "what's inside"). */
+export interface ComboContentItem {
+  productSlug: string;
+  productName: string;
+  variant: string; // e.g. "500ml"
+  qty: number;
+}
+
+/**
+ * A curated multilingual product combo. Purchased as a single discounted line
+ * (`checkout` points at a backing bundle variant so the server-verified
+ * checkout charges `comboPrice` and can't be mischarged).
+ */
+export interface Combo {
+  id: string;
+  slug: string;
+  /** Display names per language; `english` is always shown as the sub-name. */
+  names: Record<Language, string>;
+  tagline: string;
+  contents: ComboContentItem[];
+  mrpIndividual: number;
+  comboPrice: number;
+  saving: number;
+  badgeText: string | null;
+  badgeColor: "amber" | "green" | "gold" | "blue";
+  ctaText: string;
+  isGiftWrapped: boolean;
+  isExport: boolean;
+  sortOrder: number;
+  /** Backing purchasable bundle variant (existing checkout path). */
+  checkout: { variantId: string; productId: string; sku: string };
+}
+
 export interface CartItem {
   variantId: string;
   productId: string;
   slug: string;
-  routePrefix: Category | "bundles";
+  routePrefix: Category | "bundles" | "combos";
   productName: string;
   size: string;
   price: number;
   unitLabel: string;
   image: string | null;
   quantity: number;
+  /** Fulfilment contents shown beneath a curated combo cart line. */
+  comboContents?: ComboContentItem[];
 }
 
 export interface Address {

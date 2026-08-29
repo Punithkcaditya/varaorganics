@@ -1,5 +1,6 @@
 import { getStoreProducts, getFeaturedProducts, getBundle } from "@/features/products/queries";
 import { getSiteSettings } from "@/features/settings/queries";
+import { getPublishedCombos } from "@/features/combos/queries";
 import { BenefitsBar } from "@/components/home/BenefitsBar";
 import { Hero } from "@/components/home/Hero";
 import { PainPoints } from "@/components/home/PainPoints";
@@ -10,6 +11,7 @@ import { Process } from "@/components/home/Process";
 import { Bundle } from "@/components/home/Bundle";
 import { FirstOrderCTA } from "@/components/home/FirstOrderCTA";
 import { CategoryQuickNav } from "@/components/home/CategoryQuickNav";
+import { CombosPreview } from "@/components/home/CombosPreview";
 import { StickyCart } from "@/components/layout/StickyCart";
 import { JsonLd } from "@/components/schema/JsonLd";
 import { organizationSchema, websiteSchema } from "@/components/schema/builders";
@@ -22,11 +24,12 @@ export const revalidate = 60;
 const PRODUCTS_ANCHOR = "home-products";
 
 export default async function HomePage() {
-  const [products, featured, bundle, settings] = await Promise.all([
+  const [products, featured, bundle, settings, combos] = await Promise.all([
     getStoreProducts(),
     getFeaturedProducts(),
     getBundle("wellness-starter"),
     getSiteSettings(),
+    getPublishedCombos(),
   ]);
 
   // Featured ghee drives Hero / StickyCart / FirstOrderCTA.
@@ -47,6 +50,7 @@ export default async function HomePage() {
       <JsonLd data={organizationSchema()} />
       <JsonLd data={websiteSchema()} />
 
+      <CategoryQuickNav categories={availableCategories} />
       {/* Static two-column hero (Website Changes §02 — carousel removed). */}
       <div>
         <Hero
@@ -56,7 +60,6 @@ export default async function HomePage() {
           headlineEm={settings.heroHeadlineEm}
         />
       </div>
-      <CategoryQuickNav categories={availableCategories} />
       {/* Single trust strip below the hero (consolidated from two). */}
       <BenefitsBar />
       <PainPoints />
@@ -64,6 +67,8 @@ export default async function HomePage() {
       <div id={PRODUCTS_ANCHOR} className="scroll-mt-[68px]">
         <ProductGrid products={products} />
       </div>
+
+      <CombosPreview combos={combos} />
 
       <WhyVara product={heroProduct} />
       <QRProof />

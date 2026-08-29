@@ -45,6 +45,16 @@ export function CartView({ freeThreshold }: { freeThreshold: number }) {
                 <div>
                   <h2 className="font-serif text-lg font-semibold text-navy">{item.productName}</h2>
                   <p className="text-sm font-light text-navy/55">{item.size}</p>
+                  {item.comboContents && item.comboContents.length > 0 && (
+                    <ul className="mt-2 space-y-0.5 text-xs font-light text-navy/55">
+                      {item.comboContents.map((content) => (
+                        <li key={`${content.productSlug}-${content.variant}`}>
+                          {content.productName}{content.variant !== "1" ? ` · ${content.variant}` : ""}
+                          {content.qty > 1 ? ` × ${content.qty}` : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <button
                   type="button"
