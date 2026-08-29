@@ -42,6 +42,12 @@ export function ProductCard({
   const save = discountPercent(selected.price, selected.compareAtPrice);
   const inStock = selected.stock > 0;
   const image = product.images[0];
+  const notifyParams = new URLSearchParams({
+    intent: "restock",
+    product: product.productName,
+    size: selected.size,
+    sku: selected.sku,
+  });
 
   function add() {
     addItem({
@@ -156,7 +162,8 @@ export function ProductCard({
           </div>
         ) : (
           <Link
-            href={`/contact?product=${encodeURIComponent(product.productName)}`}
+            href={`/contact?${notifyParams.toString()}`}
+            aria-label={`Notify me when ${product.productName}, ${selected.size}, is back in stock`}
             className="border-navy/25 text-navy hover:border-amber hover:text-amber mt-auto w-full rounded-[2px] border py-2.5 text-center text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors"
           >
             Notify Me

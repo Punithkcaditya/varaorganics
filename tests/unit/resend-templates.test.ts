@@ -1,6 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { codConfirmationEmail, orderConfirmationEmail } from "@/lib/resend/templates";
+import {
+  codConfirmationEmail,
+  orderConfirmationEmail,
+  restockRequestAckEmail,
+  restockRequestAdminEmail,
+} from "@/lib/resend/templates";
 import type { Order } from "@/types";
 
 function order(overrides: Partial<Order> = {}): Order {
@@ -85,5 +90,37 @@ describe("Resend order emails", () => {
     expect(mail.html).not.toContain("<script>");
     expect(mail.html).toContain("&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;");
     expect(mail.html).toContain("Farm &amp; Field &lt;Unit 2&gt;");
+  });
+});
+
+describe("Resend restock-request emails", () => {
+  it("confirms the exact requested product and size to the customer", () => {
+    const mail = restockRequestAckEmail("Anita", "A2 Gir Cow Bilona Ghee", "500ml");
+
+    expect(mail.subject).toContain("Restock request received");
+    expect(mail.html).toContain("A2 Gir Cow Bilona Ghee");
+    expect(mail.html).toContain("500ml");
+    expect(mail.html).toContain("Our team will email you");
+  });
+
+  it("gives the admin the customer, product, size, SKU, and note safely", () => {
+    const mail = restockRequestAdminEmail({
+      name: "Anita <Customer>",
+      email: "anita@example.com",
+      phone: "9876543210",
+      productName: "Sesame & Oil",
+      variantName: "1L",
+      sku: "OIL-SES-1L",
+      message: "Please contact me <soon>.",
+    });
+
+    expect(mail.subject).toBe("Restock request: Sesame & Oil (1L)");
+    expect(mail.html).toContain("Anita &lt;Customer&gt;");
+    expect(mail.html).toContain("anita@example.com");
+    expect(mail.html).toContain("9876543210");
+    expect(mail.html).toContain("Sesame &amp; Oil");
+    expect(mail.html).toContain("OIL-SES-1L");
+    expect(mail.html).toContain("Please contact me &lt;soon&gt;.");
+    expect(mail.html).not.toContain("<soon>");
   });
 });

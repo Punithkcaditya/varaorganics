@@ -134,18 +134,10 @@ export function trackPurchase(
     items,
   };
   pushDataLayer("purchase", payload);
-  // Klaviyo "Placed Order" — forwarded by GTM.
-  pushDataLayer("klaviyo_placed_order", {
-    event_id: order.orderNumber,
-    value: order.totalAmount,
-    email: order.email,
-    items: (order.items ?? []).map((i) => ({
-      ProductName: i.productName,
-      Quantity: i.quantity,
-      ItemPrice: i.unitPrice,
-    })),
-  });
-  if (order.email) pushDataLayer("klaviyo_identify", { email: order.email });
+  // NOTE: the order lifecycle email trigger is fired SERVER-side as the Resend
+  // "vara/order.confirmed" event (see features/orders/service.ts) so it can't be
+  // lost if the tab closes before this page loads. GA4/Pixel purchase below stay
+  // client-side for ad attribution.
   directGa("purchase", payload);
   directPixel("Purchase", { value: order.totalAmount, currency: "INR" });
 }

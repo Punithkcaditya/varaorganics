@@ -1,3 +1,5 @@
+import { LAB_REPORTS_PATH } from "@/config/routes";
+
 /**
  * Homepage promo banner content (slider + two promo tiles). Editable marketing
  * copy. `image` is left null — drop a file in /public and set the path (e.g.
@@ -76,7 +78,7 @@ export const promoTiles: PromoTile[] = [
     eyebrow: "Verify Every Jar",
     title: "See Your Batch Lab Report",
     ctaLabel: "Learn How",
-    ctaHref: "/lab-reports",
+    ctaHref: LAB_REPORTS_PATH,
     image: "/products/farm-cheese-1-1-430x491.jpg",
     tone: "gold",
   },

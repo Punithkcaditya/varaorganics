@@ -1,12 +1,14 @@
 import type { NextRequest } from "next/server";
 import { optionalServerEnv, USE_MOCK_DATA } from "@/lib/validation/env";
 import { sendWhatsAppTemplate, alertOperator } from "@/lib/wati/server";
-import { sendEmail, notifyInternal } from "@/lib/resend/server";
-import { shipmentTrackingEmail } from "@/lib/resend/templates";
+import { sendEmail, notifyInternal, sendResendEvent } from "@/lib/resend/server";
+import { shipmentTrackingEmail, ndrCustomerEmail } from "@/lib/resend/templates";
 import { findOrderByAwb, recordShipmentEvent, updateOrder } from "@/features/orders/store";
 import { ok, fail, serverError } from "@/lib/api/respond";
 import { safeLog } from "@/lib/security/redact";
 import { mapShiprocketStatus } from "@/lib/shiprocket/status";
+import { site } from "@/config/site";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,12 +60,15 @@ export async function POST(req: NextRequest) {
     });
 
     const mapped = mapShiprocketStatus(rawStatus);
-    if (mapped && mapped !== order.fulfillmentStatus) {
+    // Shiprocket re-sends webhooks for the same status, so notify ONLY on an
+    // actual transition — otherwise the customer gets duplicate emails.
+    const statusChanged = mapped != null && mapped !== order.fulfillmentStatus;
+    if (statusChanged) {
       await updateOrder(order.id, { fulfillmentStatus: mapped });
     }
 
-    // Customer notification on meaningful milestones.
-    if (mapped === "shipped" || mapped === "delivered") {
+    // Customer notification on meaningful milestones (once, on transition).
+    if (statusChanged && (mapped === "shipped" || mapped === "delivered")) {
       await sendWhatsAppTemplate({
         phone: order.address.phone,
         templateName: mapped === "delivered" ? "order_delivered" : "order_shipped",
@@ -77,18 +82,42 @@ export async function POST(req: NextRequest) {
         const mail = shipmentTrackingEmail({ ...order, fulfillmentStatus: mapped });
         await sendEmail({ to: order.email, subject: mail.subject, html: mail.html });
       }
+      if (mapped === "delivered") {
+        // Server-verified delivery event → triggers the Resend "order
+        // delivered" Automation (review request +3d, reorder nudge +45d).
+        // Only fires on the transition to delivered, so it can't double-count.
+        await sendResendEvent({
+          event: "vara/order.delivered",
+          email: order.email,
+          payload: {
+            customer_name: order.address.fullName,
+            order_id: order.orderNumber,
+            product_name: order.items[0]?.productName ?? "",
+            delivered_at: new Date().toISOString(),
+            verify_url: `${site.url}${LAB_REPORTS_PATH}`,
+          },
+        });
+      }
     }
 
-    // Failed delivery (NDR) — alert the operator immediately.
-    if (mapped === "failed") {
+    // Failure states (all mapped to "failed") — distinguish a retriable failed
+    // delivery attempt (NDR) from a returned/lost shipment, because the customer
+    // message differs. Only email the customer on a transition, and only the
+    // "we'll try again" note when a retry is actually expected.
+    if (statusChanged && mapped === "failed") {
+      const returnedOrLost = /\b(rto|return|lost)\b/.test(rawStatus.toLowerCase());
+      if (!returnedOrLost) {
+        const ndr = ndrCustomerEmail(order, rawStatus);
+        await sendEmail({ to: order.email, subject: ndr.subject, html: ndr.html });
+      }
       await alertOperator(
         "ndr_alert",
-        `Failed delivery for ${order.orderNumber} (AWB ${awb}): ${rawStatus}`,
+        `${returnedOrLost ? "Returned/lost" : "Failed delivery"} for ${order.orderNumber} (AWB ${awb}): ${rawStatus}`,
       );
       await notifyInternal(
-        `NDR — failed delivery for ${order.orderNumber}`,
+        `${returnedOrLost ? "Return/lost" : "NDR — failed delivery"} for ${order.orderNumber}`,
         `<p>Order <strong>${order.orderNumber}</strong> (AWB ${awb}) reported: ${rawStatus}.</p>
-         <p>Reattempt via the Shiprocket dashboard before the customer complains.</p>`,
+         <p>${returnedOrLost ? "Shipment is being returned or is lost — contact the customer to arrange a resend or refund." : "Reattempt via the Shiprocket dashboard before the customer complains."}</p>`,
       );
     }
 

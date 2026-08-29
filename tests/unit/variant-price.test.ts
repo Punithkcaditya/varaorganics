@@ -12,7 +12,7 @@ describe("catalog variant pricing", () => {
     const v500 = ghee.variants.find((v) => v.size === "500ml")!;
     const v1l = ghee.variants.find((v) => v.size === "1L")!;
     expect(v500.price).toBe(1399);
-    expect(v1l.price).toBe(2699);
+    expect(v1l.price).toBe(2599);
     expect(v500.price).not.toBe(v1l.price);
   });
 

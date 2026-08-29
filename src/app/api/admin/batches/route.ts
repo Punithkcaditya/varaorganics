@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 import { getAdminSupabase } from "@/lib/supabase/admin";
 import { getAdminUser } from "@/lib/supabase/auth";
 import { USE_MOCK_DATA } from "@/lib/validation/env";
@@ -109,7 +110,7 @@ export async function POST(req: NextRequest) {
       if (paramError) throw paramError;
     }
 
-    revalidatePath("/lab-reports");
+    revalidatePath(LAB_REPORTS_PATH);
     revalidatePath(`/verify/${b.batchNumber}`);
     revalidatePath("/");
 

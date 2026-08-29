@@ -66,9 +66,12 @@ const serverSchema = z.object({
   SHIPROCKET_PASSWORD: z.string().optional(),
   SHIPROCKET_PICKUP_LOCATION: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+  RESEND_SEGMENT_ID: z.string().optional(),
+  // Backward-compatible name used by the first production deployment.
   RESEND_AUDIENCE_ID: z.string().optional(),
   ORDER_NOTIFICATION_EMAIL: z.string().email().optional().or(z.literal("")),
   EMAIL_FROM: z.string().optional(),
+  EMAIL_REPLY_TO: z.string().optional(),
   REVALIDATE_SECRET: z.string().optional(),
   KLAVIYO_API_KEY: z.string().optional(),
   WATI_API_TOKEN: z.string().optional(),

@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/layout-primitives";
 import { PurchaseTracker } from "@/components/checkout/PurchaseTracker";
 import { getOrder } from "@/features/orders/service";
 import { formatPrice } from "@/lib/utils";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -37,22 +38,26 @@ export default async function OrderConfirmedPage({
       )}
 
       <div className="mx-auto max-w-[640px] text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/15 text-3xl text-success">
+        <div className="bg-success/15 text-success mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full text-3xl">
           ✓
         </div>
-        <h1 className="mb-3 font-serif text-3xl font-semibold text-navy">Thank you for your order</h1>
-        <p className="mb-2 text-navy/70">
+        <h1 className="text-navy mb-3 font-serif text-3xl font-semibold">
+          Thank you for your order
+        </h1>
+        <p className="text-navy/70 mb-2">
           Order <strong>{order.orderNumber}</strong> is confirmed
           {cod ? " (Cash on Delivery)" : " and payment received"}.
         </p>
-        <p className="mb-8 text-sm text-navy/55">A confirmation email is on its way to {order.email}.</p>
+        <p className="text-navy/55 mb-8 text-sm">
+          A confirmation email is on its way to {order.email}.
+        </p>
       </div>
 
-      <div className="mx-auto max-w-[640px] rounded border border-navy/10 bg-paper/40 p-6 text-left">
-        <h2 className="mb-4 font-serif text-xl font-semibold text-navy">Order summary</h2>
+      <div className="border-navy/10 bg-paper/40 mx-auto max-w-[640px] rounded border p-6 text-left">
+        <h2 className="text-navy mb-4 font-serif text-xl font-semibold">Order summary</h2>
         <ul className="mb-4 space-y-2 text-sm">
           {order.items.map((i) => (
-            <li key={i.sku} className="flex justify-between gap-3 text-navy/70">
+            <li key={i.sku} className="text-navy/70 flex justify-between gap-3">
               <span>
                 {i.productName} · {i.size} × {i.quantity}
               </span>
@@ -60,7 +65,7 @@ export default async function OrderConfirmedPage({
             </li>
           ))}
         </ul>
-        <dl className="space-y-1.5 border-t border-navy/10 pt-3 text-sm">
+        <dl className="border-navy/10 space-y-1.5 border-t pt-3 text-sm">
           <div className="flex justify-between">
             <dt className="text-navy/60">Subtotal</dt>
             <dd>{formatPrice(order.subtotal)}</dd>
@@ -69,16 +74,16 @@ export default async function OrderConfirmedPage({
             <dt className="text-navy/60">Shipping</dt>
             <dd>{order.shippingAmount === 0 ? "Free" : formatPrice(order.shippingAmount)}</dd>
           </div>
-          <div className="flex justify-between border-t border-navy/10 pt-2 text-base font-medium">
+          <div className="border-navy/10 flex justify-between border-t pt-2 text-base font-medium">
             <dt>Total</dt>
             <dd>{formatPrice(order.totalAmount)}</dd>
           </div>
         </dl>
 
-        <h3 className="mb-1 mt-6 text-xs font-semibold uppercase tracking-[0.1em] text-navy/50">
+        <h3 className="text-navy/50 mt-6 mb-1 text-xs font-semibold tracking-[0.1em] uppercase">
           Delivery address
         </h3>
-        <p className="text-sm text-navy/70">
+        <p className="text-navy/70 text-sm">
           {order.address.fullName}
           <br />
           {order.address.addressLine1}
@@ -91,24 +96,29 @@ export default async function OrderConfirmedPage({
 
         {order.trackingUrl ? (
           <p className="mt-6 text-sm">
-            <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer" className="text-amber underline">
+            <a
+              href={order.trackingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber underline"
+            >
               Track your shipment →
             </a>
           </p>
         ) : (
-          <p className="mt-6 text-sm text-navy/50">
+          <p className="text-navy/50 mt-6 text-sm">
             You&apos;ll receive a tracking link by email once your order ships.
           </p>
         )}
         <p className="mt-2 text-sm">
-          <Link href="/lab-reports" className="text-amber underline">
+          <Link href={LAB_REPORTS_PATH} className="text-amber underline">
             View lab reports & batch verification →
           </Link>
         </p>
       </div>
 
       <div className="mt-10 text-center">
-        <Link href="/shop" className="text-sm font-medium uppercase tracking-[0.14em] text-amber">
+        <Link href="/shop" className="text-amber text-sm font-medium tracking-[0.14em] uppercase">
           Continue shopping →
         </Link>
       </div>

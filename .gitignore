@@ -48,3 +48,4 @@ next-env.d.ts
 # local secret paste helper — never commit
 HOSTINGER_ENV_PASTE.txt
 *.zip
+tmp/

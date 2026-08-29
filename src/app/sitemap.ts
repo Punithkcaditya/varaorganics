@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { canonical } from "@/config/site";
 import { getStoreProducts } from "@/features/products/queries";
 import { getPublishedArticles } from "@/features/articles/queries";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 
 /**
  * Sitemap (§16). Includes static pages, product URLs and published Learn
@@ -17,9 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "shop/ghee",
     "shop/honey",
     "shop/oils",
+    "combos",
     "bundles/wellness-starter",
     "our-story",
-    "lab-reports",
+    LAB_REPORTS_PATH.slice(1),
     "faqs",
     "contact",
     "learn",

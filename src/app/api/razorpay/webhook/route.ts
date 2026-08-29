@@ -1,6 +1,9 @@
 import type { NextRequest } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay/server";
-import { finalizeByRazorpayOrder } from "@/features/orders/service";
+import {
+  finalizeByRazorpayOrder,
+  markPaymentFailedByRazorpayOrder,
+} from "@/features/orders/service";
 import { ok, fail, serverError } from "@/lib/api/respond";
 import { safeLog } from "@/lib/security/redact";
 
@@ -41,6 +44,12 @@ export async function POST(req: NextRequest) {
       safeLog("razorpay/webhook", "processed", {
         event: event.event,
         finalized: Boolean(order),
+      });
+    } else if (event.event === "payment.failed" && entity?.order_id) {
+      const order = await markPaymentFailedByRazorpayOrder(entity.order_id, entity.id ?? null);
+      safeLog("razorpay/webhook", "processed", {
+        event: event.event,
+        matched: Boolean(order),
       });
     }
     // Always 200 for handled/ignored events so Razorpay stops retrying.

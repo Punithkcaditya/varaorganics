@@ -51,7 +51,13 @@ export function B2BEnquiryForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: values.fullName, email: values.email, message }),
+        body: JSON.stringify({
+          name: values.fullName,
+          email: values.email,
+          message,
+          kind: "b2b",
+          companyName: values.company,
+        }),
       });
       const data = await res.json();
       if (data.ok) {
@@ -131,7 +137,7 @@ export function B2BEnquiryForm() {
 
       {status === "error" && (
         <p role="alert" className="rounded bg-danger/5 p-3 text-sm text-danger">
-          Something went wrong. Please try again, or email hello@varaorganics.com directly.
+          Something went wrong. Please try again, or email hello@varaorganic.com directly.
         </p>
       )}
 

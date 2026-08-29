@@ -176,6 +176,32 @@ export interface SiteSettingsRow {
   updated_at: string;
 }
 
+export interface CombosRow {
+  id: string;
+  slug: string;
+  name_english: string;
+  name_kannada: string | null;
+  name_hindi: string | null;
+  name_telugu: string | null;
+  name_tamil: string | null;
+  name_malayalam: string | null;
+  tagline: string | null;
+  contents: Json;
+  mrp_individual: number;
+  combo_price: number;
+  saving: number;
+  badge_text: string | null;
+  badge_color: string | null;
+  cta_text: string | null;
+  is_gift_wrapped: boolean;
+  is_export: boolean;
+  checkout_sku: string | null;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 type Table<Row, Insert = Partial<Row>, Update = Partial<Row>> = {
   Row: Row;
   Insert: Insert;
@@ -199,6 +225,7 @@ export interface Database {
       landing_pages: Table<LandingPagesRow>;
       contact_submissions: Table<ContactSubmissionsRow>;
       site_settings: Table<SiteSettingsRow>;
+      combos: Table<CombosRow>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

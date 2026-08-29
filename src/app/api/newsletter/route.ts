@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { addContact } from "@/lib/resend/server";
+import { addContact, sendResendEvent } from "@/lib/resend/server";
 import { ok, fail, serverError } from "@/lib/api/respond";
 import { checkRateLimit, clientIp } from "@/lib/security/rate-limit";
 
@@ -8,7 +8,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Newsletter signup — adds the email to the Resend marketing Audience.
+ * Newsletter signup — adds the email to the Resend marketing Segment and
+ * emits a custom event that can trigger the welcome-email Automation.
  * Public endpoint: rate-limited + honeypot. Never reveals whether an address is
  * already subscribed (privacy + no enumeration).
  */
@@ -38,7 +39,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = await addContact({ email: parsed.data.email, firstName: parsed.data.firstName });
-    if (!result.ok) return fail(502, "provider_error", "Could not subscribe right now. Please try again.");
+    if (!result.ok)
+      return fail(502, "provider_error", "Could not subscribe right now. Please try again.");
+    await sendResendEvent({
+      event: "vara/newsletter.subscribed",
+      email: parsed.data.email,
+      payload: { first_name: parsed.data.firstName ?? "" },
+    });
     return ok({ subscribed: true });
   } catch (err) {
     return serverError("newsletter", err);

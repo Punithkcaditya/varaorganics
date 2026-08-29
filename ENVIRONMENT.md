@@ -29,8 +29,11 @@ secrets throw a clear error on first use in production if missing.
 | `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` | shipping | Shiprocket auth (token cached in memory). |
 | `SHIPROCKET_PICKUP_LOCATION` | shipping | Pickup nickname from the Shiprocket dashboard. **CONFIRM before go-live.** |
 | `RESEND_API_KEY` | email | Blank = emails logged, not sent. |
+| `RESEND_SEGMENT_ID` | newsletter | ID of the Resend `Website Newsletter` segment. |
+| `RESEND_AUDIENCE_ID` | newsletter | Legacy fallback; may contain the Segment ID until production is migrated to `RESEND_SEGMENT_ID`. |
 | `ORDER_NOTIFICATION_EMAIL` | email | Internal inbox for order/contact notifications. |
 | `EMAIL_FROM` | email | Verified Resend sending identity. |
+| `EMAIL_REPLY_TO` | email | Address that receives replies to transactional messages. |
 | `REVALIDATE_SECRET` | ISR webhook | Sent as `x-revalidate-secret` header (not query string). Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. |
 
 ## Behaviour by mode

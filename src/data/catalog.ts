@@ -1,4 +1,5 @@
 import type { Product, ProductImage } from "@/types";
+import { comboBundleProducts } from "./combos";
 
 /**
  * Canonical launch catalog. Single source of truth for mock mode AND the
@@ -596,4 +597,6 @@ Everything you need to begin: our hand-churned A2 Gir Cow Bilona Ghee and Raw Wi
   currentBatch: null,
 };
 
-export const allProducts: Product[] = [...catalog, bundleProduct];
+// Combo bundle products make combos purchasable through the existing checkout
+// (getVariantById resolves them). They are is_bundle, so /shop never lists them.
+export const allProducts: Product[] = [...catalog, bundleProduct, ...comboBundleProducts];

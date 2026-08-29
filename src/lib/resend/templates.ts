@@ -1,4 +1,5 @@
 import { site } from "@/config/site";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 import { formatPrice } from "@/lib/utils";
 import type { Order } from "@/types";
 
@@ -26,6 +27,10 @@ function escapeHtml(value: string): string {
         "'": "&#39;",
       })[character] ?? character,
   );
+}
+
+function subjectText(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
 }
 
 function wrap(title: string, body: string): string {
@@ -87,7 +92,7 @@ function trackingLine(order: Order): string {
 }
 
 function verifyLine(): string {
-  return `<p style="font-size:13px"><a href="${escapeHtml(site.url)}/lab-reports" style="color:${GOLD}">View lab reports & batch verification →</a></p>`;
+  return `<p style="font-size:13px"><a href="${escapeHtml(site.url)}${LAB_REPORTS_PATH}" style="color:${GOLD}">View lab reports & batch verification →</a></p>`;
 }
 
 function orderDetailsLine(order: Order): string {
@@ -181,6 +186,96 @@ export function contactAckEmail(name: string) {
       "Thanks for reaching out",
       `<p style="font-size:14px">Hi ${escapeHtml(name)}, thank you for contacting ${site.name}. We've received your
        message and will get back to you shortly.</p>${STORY}`,
+    ),
+  };
+}
+
+export interface RestockRequestEmailInput {
+  name: string;
+  email: string;
+  phone?: string;
+  productName: string;
+  variantName: string;
+  sku?: string;
+  message?: string;
+}
+
+/** Confirms that the team received a customer's product-specific restock request. */
+export function restockRequestAckEmail(name: string, productName: string, variantName: string) {
+  return {
+    subject: `Restock request received — ${site.name}`,
+    html: wrap(
+      "We'll keep you posted",
+      `<p style="font-size:14px">Hi ${escapeHtml(name)}, we've recorded your request for
+       <strong>${escapeHtml(productName)}</strong>, size <strong>${escapeHtml(variantName)}</strong>.</p>
+       <p style="font-size:14px">Our team will email you when this exact size is available again.</p>${STORY}`,
+    ),
+  };
+}
+
+/** Structured internal email so the team can later reply to the waiting customer. */
+export function restockRequestAdminEmail(input: RestockRequestEmailInput) {
+  const phoneLine = input.phone
+    ? `<p style="font-size:14px"><strong>Phone:</strong> ${escapeHtml(input.phone)}</p>`
+    : "";
+  const skuLine = input.sku
+    ? `<p style="font-size:14px"><strong>SKU:</strong> ${escapeHtml(input.sku)}</p>`
+    : "";
+  const messageLine = input.message
+    ? `<p style="font-size:14px"><strong>Customer note:</strong><br/>${escapeHtml(input.message).replace(/\n/g, "<br/>")}</p>`
+    : "";
+
+  return {
+    subject: `Restock request: ${subjectText(input.productName)} (${subjectText(input.variantName)})`,
+    html: wrap(
+      "New back-in-stock request",
+      `<p style="font-size:14px"><strong>Product:</strong> ${escapeHtml(input.productName)}</p>
+       <p style="font-size:14px"><strong>Selected size:</strong> ${escapeHtml(input.variantName)}</p>
+       ${skuLine}
+       <hr style="border:0;border-top:1px solid #eee;margin:18px 0"/>
+       <p style="font-size:14px"><strong>Customer:</strong> ${escapeHtml(input.name)}</p>
+       <p style="font-size:14px"><strong>Email:</strong> ${escapeHtml(input.email)}</p>
+       ${phoneLine}${messageLine}
+       <p style="font-size:13px;color:#666">Reply directly to this email when the selected size is back in stock.</p>`,
+    ),
+  };
+}
+
+/** Customer notice when a delivery attempt fails (NDR). Event #4b. */
+export function ndrCustomerEmail(order: Order, reason?: string) {
+  const orderNumber = escapeHtml(order.orderNumber);
+  const reasonLine = reason
+    ? `<p style="font-size:13px;color:#666">Reason noted by the courier: ${escapeHtml(reason)}.</p>`
+    : "";
+  return {
+    subject: `We tried to deliver your Vara order ${order.orderNumber}`,
+    html: wrap(
+      "We tried to deliver your order",
+      `<p style="font-size:14px">Hi ${escapeHtml(order.address.fullName)}, we attempted delivery of your Vara order
+       <strong>${orderNumber}</strong> today but couldn't reach you.</p>
+       ${reasonLine}
+       <p style="font-size:14px">Our courier will try again shortly. If you've changed your address or want to
+       reschedule, just reply to this email with your order number and we'll sort it out.</p>
+       ${order.trackingUrl ? trackingLine(order) : ""}
+       <p style="font-size:13px;color:#666">We want to make sure your order reaches you.</p>`,
+    ),
+  };
+}
+
+/** Auto-acknowledgement for a B2B / export enquiry. Event #9. */
+export function b2bAckEmail(name: string, company?: string) {
+  const licenceLine = site.fssaiLicence
+    ? `<p style="font-size:12px;color:#888;margin-top:16px">FSSAI Central Licence: ${escapeHtml(site.fssaiLicence)}<br/>${escapeHtml(site.legalName)} · Bengaluru, Karnataka, India</p>`
+    : "";
+  return {
+    subject: `Thank you for your enquiry — ${site.name}`,
+    html: wrap(
+      "Thank you for your enquiry",
+      `<p style="font-size:14px">Dear ${escapeHtml(name)}, thank you for your interest in ${site.name}.</p>
+       <p style="font-size:14px">We've received your enquiry${company ? ` from <strong>${escapeHtml(company)}</strong>` : ""}.
+       Our B2B team will respond within 1 business day with pricing, MOQ details, and lab documentation.</p>
+       <p style="font-size:13px"><a href="${escapeHtml(site.url)}/b2b" style="color:${GOLD}">View our B2B / export page →</a></p>
+       ${licenceLine}`,
     ),
   };
 }

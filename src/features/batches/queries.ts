@@ -4,7 +4,11 @@ import { getServerSupabase } from "@/lib/supabase/server";
 import { USE_MOCK_DATA } from "@/lib/validation/env";
 import { safeError } from "@/lib/security/redact";
 import { allProducts } from "@/data/catalog";
-import { mapProduct, PRODUCT_SELECT, type ProductRowWithRelations } from "@/features/products/mappers";
+import {
+  mapProduct,
+  PRODUCT_SELECT,
+  type ProductRowWithRelations,
+} from "@/features/products/mappers";
 import type { ProductBatch, Product } from "@/types";
 
 export type BatchLookup =
@@ -127,7 +131,7 @@ function mockLookup(batchNumber: string): BatchLookup {
   return { state: "unknown" };
 }
 
-/** All active batches across active products — for /lab-reports. */
+/** All active batches across active products — for the canonical lab-report page. */
 export const getAllActiveBatches = cache(
   async (): Promise<{ product: Product; batch: ProductBatch }[]> => {
     const { getAllProducts } = await import("@/features/products/queries");

@@ -35,4 +35,25 @@ describe("post-add cart actions", () => {
       screen.getByRole("link", { name: `${product.productName} added. Proceed to cart` }),
     ).toHaveAttribute("href", "/cart");
   });
+
+  it("carries the selected out-of-stock product, size, and SKU into Notify Me", () => {
+    const outOfStockProduct = {
+      ...product,
+      variants: product.variants.map((item) => ({ ...item, stock: 0 })),
+    };
+    const selected = outOfStockProduct.variants.find((item) => item.active)!;
+
+    render(<ProductCard product={outOfStockProduct} />);
+
+    const link = screen.getByRole("link", {
+      name: `Notify me when ${product.productName}, ${selected.size}, is back in stock`,
+    });
+    const url = new URL(link.getAttribute("href")!, "https://www.varaorganic.com");
+
+    expect(url.pathname).toBe("/contact");
+    expect(url.searchParams.get("intent")).toBe("restock");
+    expect(url.searchParams.get("product")).toBe(product.productName);
+    expect(url.searchParams.get("size")).toBe(selected.size);
+    expect(url.searchParams.get("sku")).toBe(selected.sku);
+  });
 });

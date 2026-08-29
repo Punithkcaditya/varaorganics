@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LAB_REPORTS_PATH } from "@/config/routes";
 import { Container } from "@/components/ui/layout-primitives";
 import { Breadcrumb } from "@/components/learn/Breadcrumb";
 import { Badge } from "@/components/ui/Badge";
@@ -43,7 +44,7 @@ function Shell({ children, batchId }: { children: React.ReactNode; batchId: stri
 
 function HelpCta() {
   return (
-    <p className="mt-8 text-sm text-navy/60">
+    <p className="text-navy/60 mt-8 text-sm">
       Something look wrong?{" "}
       <Link href="/contact" className="text-amber underline">
         Contact us
@@ -60,7 +61,9 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
   if (result.state === "error") {
     return (
       <Shell batchId={batchId}>
-        <h1 className="mb-3 font-serif text-3xl font-semibold text-navy">Verification unavailable</h1>
+        <h1 className="text-navy mb-3 font-serif text-3xl font-semibold">
+          Verification unavailable
+        </h1>
         <p className="text-navy/70">
           We couldn&apos;t verify this batch right now. Please try again shortly.
         </p>
@@ -72,7 +75,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
   if (result.state === "unknown") {
     return (
       <Shell batchId={batchId}>
-        <h1 className="mb-3 font-serif text-3xl font-semibold text-navy">Batch not found</h1>
+        <h1 className="text-navy mb-3 font-serif text-3xl font-semibold">Batch not found</h1>
         <p className="text-navy/70">
           We couldn&apos;t find a batch matching <strong>{batchId}</strong>. Check the code on your
           jar and try again.
@@ -94,18 +97,18 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
           {inactive ? "Archived batch" : "Verified batch"}
         </Badge>
       </div>
-      <h1 className="mb-1 font-serif text-3xl font-semibold text-navy">{product.productName}</h1>
-      <p className="mb-6 text-navy/60">Batch {batch.batchNumber}</p>
+      <h1 className="text-navy mb-1 font-serif text-3xl font-semibold">{product.productName}</h1>
+      <p className="text-navy/60 mb-6">Batch {batch.batchNumber}</p>
 
       {inactive && (
-        <p className="mb-6 rounded border border-warning/30 bg-warning/5 p-4 text-sm text-warning">
+        <p className="border-warning/30 bg-warning/5 text-warning mb-6 rounded border p-4 text-sm">
           This batch is no longer in active distribution. The lab results below remain on record.
         </p>
       )}
 
       <div className="mb-8 flex flex-wrap items-start gap-6">
         <BatchQr batchNumber={batch.batchNumber} size={120} />
-        <p className="max-w-sm text-sm font-light leading-relaxed text-navy/60">
+        <p className="text-navy/60 max-w-sm text-sm leading-relaxed font-light">
           This code is printed on your jar. Scanning it always returns the report for this exact
           batch — not a generic certificate.
         </p>
@@ -113,12 +116,12 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
 
       <dl className="mb-8 grid grid-cols-2 gap-4">
         <div>
-          <dt className="text-[11px] uppercase tracking-[0.1em] text-navy/45">Manufactured</dt>
-          <dd className="font-medium text-navy">{formatDate(batch.mfgDate)}</dd>
+          <dt className="text-navy/45 text-[11px] tracking-[0.1em] uppercase">Manufactured</dt>
+          <dd className="text-navy font-medium">{formatDate(batch.mfgDate)}</dd>
         </div>
         <div>
-          <dt className="text-[11px] uppercase tracking-[0.1em] text-navy/45">Best before</dt>
-          <dd className="font-medium text-navy">{formatDate(batch.bestBefore)}</dd>
+          <dt className="text-navy/45 text-[11px] tracking-[0.1em] uppercase">Best before</dt>
+          <dd className="text-navy font-medium">{formatDate(batch.bestBefore)}</dd>
         </div>
       </dl>
 
@@ -126,17 +129,23 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
         <table className="w-full border-collapse text-sm">
           <caption className="sr-only">Lab results for batch {batch.batchNumber}</caption>
           <thead>
-            <tr className="border-b border-navy/10 text-left text-[11px] uppercase tracking-[0.1em] text-navy/45">
-              <th scope="col" className="py-2">Parameter</th>
-              <th scope="col" className="py-2">Result</th>
-              <th scope="col" className="py-2 text-right">Status</th>
+            <tr className="border-navy/10 text-navy/45 border-b text-left text-[11px] tracking-[0.1em] uppercase">
+              <th scope="col" className="py-2">
+                Parameter
+              </th>
+              <th scope="col" className="py-2">
+                Result
+              </th>
+              <th scope="col" className="py-2 text-right">
+                Status
+              </th>
             </tr>
           </thead>
           <tbody>
             {batch.labParameters.map((p) => (
-              <tr key={p.id} className="border-b border-navy/5 last:border-0">
-                <td className="py-2.5 font-light text-navy/70">{p.name}</td>
-                <td className="py-2.5 font-medium text-navy">{p.result}</td>
+              <tr key={p.id} className="border-navy/5 border-b last:border-0">
+                <td className="text-navy/70 py-2.5 font-light">{p.name}</td>
+                <td className="text-navy py-2.5 font-medium">{p.result}</td>
                 <td className="py-2.5 text-right">
                   <Badge tone={p.status === "Premium" ? "premium" : "success"}>{p.status}</Badge>
                 </td>
@@ -149,17 +158,21 @@ export default async function VerifyPage({ params }: { params: Promise<{ batchId
       )}
 
       <p className="mt-6 text-sm">
-        {batch.labReportUrl ? (
-          <a href={batch.labReportUrl} target="_blank" rel="noopener noreferrer" className="text-amber underline">
-            View full NABL lab report (PDF) →
-          </a>
-        ) : (
-          <span className="text-navy/50">Full NABL lab report PDF pending upload.</span>
-        )}
+        <Link
+          href={batch.labReportUrl ?? LAB_REPORTS_PATH}
+          target={batch.labReportUrl ? "_blank" : undefined}
+          rel={batch.labReportUrl ? "noopener noreferrer" : undefined}
+          className="text-amber underline"
+        >
+          {batch.labReportUrl ? "View this batch report (PDF) →" : "View available lab reports →"}
+        </Link>
       </p>
 
       <p className="mt-6 text-sm">
-        <Link href={`/${product.routePrefix}/${product.variants.find((v) => v.routeSlug)?.routeSlug ?? ""}`} className="text-amber underline">
+        <Link
+          href={`/${product.routePrefix}/${product.variants.find((v) => v.routeSlug)?.routeSlug ?? ""}`}
+          className="text-amber underline"
+        >
           View this product →
         </Link>
       </p>

@@ -13,6 +13,7 @@ const nav = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/combos", label: "Combos" },
   { href: "/admin/inventory", label: "Inventory" },
   { href: "/admin/batches", label: "Batches" },
   { href: "/admin/batch-lookup", label: "Batch lookup" },
