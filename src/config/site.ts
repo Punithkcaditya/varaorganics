@@ -16,8 +16,8 @@ export const site = {
   // FSSAI Central Licence, issued to Varixa Global Ventures Pvt. Ltd. (Fix #19).
   fssaiLicence: "11226998000505",
   social: {
-    instagram: "https://www.instagram.com/varaorganics",
-    facebook: "https://www.facebook.com/varaorganics",
+    instagram: "https://www.instagram.com/varaorganic",
+    facebook: "https://www.facebook.com/varaorganic",
   },
 } as const;
 

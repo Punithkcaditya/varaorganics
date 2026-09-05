@@ -47,7 +47,7 @@ marked **CONFIRM** must be validated by Varixa Global before go-live.
 ## E. Contact / business data
 
 14. `lead.txt` two Bengaluru addresses + phones seeded into a typed `contact-locations` config, `needs_confirmation: true`. Google Maps links are generated from the address string (no explicit URLs supplied). **CONFIRM** which is the customer-facing address and which (if any) is the Shiprocket pickup.
-15. `ORDER_NOTIFICATION_EMAIL` / `EMAIL_FROM` default to placeholders on `varaorganics.com`; a verified Resend sending domain is **REQUIRES CREDENTIALS**.
+15. `ORDER_NOTIFICATION_EMAIL` / `EMAIL_FROM` default to placeholders on `varaorganic.com`; a verified Resend sending domain is **REQUIRES CREDENTIALS**.
 
 ## F. Credentials (all absent → env placeholders, runtime-validated)
 
@@ -58,7 +58,7 @@ Supabase URL/keys, Razorpay key id/secret/webhook secret, Shiprocket email/passw
 17. **Hosting — Vercel vs Hostinger.** The Tech Stack doc specifies Vercel; the original spec and
     all prior work specify Hostinger, and deployment is already under way there.
     → **Confirmed: stay on Hostinger.** Behaviour is identical either way (both run a Node server).
-18. **Domain — `.in` vs `.com`.** The Tech Stack doc says `varaorganics.in`; every canonical,
+18. **Domain — `.in` vs `.com`.** The Tech Stack doc says `varaorganic.in`; every canonical,
     sitemap entry and schema uses `varaorganic.com`. → **Confirmed: `.com`.**
 19. **Next.js 14 (doc) vs 16 (built).** Same resolution as B1 — latest stable.
 20. **Denormalized schema in the Tech Stack doc** (products.variants jsonb, batches, inventory)
